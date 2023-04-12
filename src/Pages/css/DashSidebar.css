@@ -1,0 +1,22 @@
+/* .sidebar-container {
+    display: "flex";
+    height: 100vh ;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    background: #2389ae;
+
+}
+
+.sidebar-menu1 {
+    margin-bottom: 40px;
+    margin-top: 20px;
+    outline: 5px solid #9b1497;
+} */
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+}
