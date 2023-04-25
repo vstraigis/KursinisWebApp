@@ -1,3 +1,3 @@
 # KursinisWebApp
 
-*Peleas webproject*
+*Pelekas webproject*

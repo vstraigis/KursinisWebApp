@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  password     String
+  role         Role      @default(USER)
+  licenses     License[]
+  trips        Trip[]
+  visitedLakes LakeVisit[]
+}
+
+model License {
+  id     Int    @id @default(autoincrement())
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Trip {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  date       DateTime
+}
+
+model Lake {
+  id         Int        @id @default(autoincrement())
+  x          Float
+  y          Float
+  isRented   Boolean
+  isPrivate  Boolean
+  isLake     Boolean
+  isRiver    Boolean
+  name       String
+  lakeVisits LakeVisit[]
+}
+
+model LakeVisit {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+  lakeId Int
+  lake   Lake @relation(fields: [lakeId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  USER
+}
