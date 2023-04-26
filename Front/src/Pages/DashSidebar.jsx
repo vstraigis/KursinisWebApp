@@ -16,10 +16,12 @@ import "./css/DashSidebar.css"
 import { Link, Outlet } from "react-router-dom";
 
 
-const DashSidebar = () => {
+const DashSidebar = ({ authDelete }) => {
 
-  const { collapseSidebar} =
+  const { collapseSidebar } =
     useProSidebar();
+
+
 
   // const { collapseSidebar, collapsed, toggled, broken, rtl } =
   //   useProSidebar();
@@ -70,7 +72,7 @@ const DashSidebar = () => {
             Žemėlapis
           </MenuItem>
           <MenuItem component={<Link to="settings" className="link" />} icon={<SettingsApplicationsRoundedIcon />}> Nustatymai </MenuItem>
-          <MenuItem icon={<LogoutRoundedIcon />}> Atsijungti </MenuItem>
+          <MenuItem icon={<LogoutRoundedIcon onClick={() => {authDelete(); console.log("logout"); }} />}> Atsijungti </MenuItem>
         </Menu>
       </Sidebar>
       <div style={{ flexGrow: 1, padding: "1rem" }}>

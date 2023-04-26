@@ -16,6 +16,24 @@ const FormPage = ({authChange}) => {
 
     try {
       // Perform authentication logic here
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: logmail,
+          password: logpass
+        }),
+      });
+
+      const parseRes = await response.json();
+
+      console.log(parseRes, "parseRes");
+
+      localStorage.setItem("token", parseRes.token);
+
+      authChange();
+
+
       navigate('/dashboard');
 
     } catch (error) {
@@ -59,6 +77,8 @@ const FormPage = ({authChange}) => {
   const [regname, setName] = useState("");
   const [regmail, setEmail] = useState("");
   const [regpass, setPassword] = useState("");
+  const [logmail, setLogEmail] = useState("");
+  const [logpass, setLogPassword] = useState("");
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -71,6 +91,16 @@ const FormPage = ({authChange}) => {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
+  const handleLogEmailChange = (event) => {
+    setLogEmail(event.target.value);
+  };
+
+  const handleLogPasswordChange = (event) => {
+    setLogPassword(event.target.value);
+  };
+
+
 
 
   return (
@@ -91,13 +121,13 @@ const FormPage = ({authChange}) => {
         </div>
         <div className="form-container sign-in-container">
           <form className="logregform" action="#" onSubmit={handleSignIn} >
-            <h1 className="log-text">Prisijungti</h1>
+            <h1 className="log-text">Prisijungimas</h1>
             <div className="social-containerform">
               <a href="#" className="social"><img src={ggbutt} alt="Google"/></a>
             </div>
             <span className="additional">arba prisijunkite su paštu</span>
-            <input className="loginemail" type="email" placeholder="El.Paštas" />
-            <input className="loginpass" type="password" placeholder="Slaptažodis" />
+            <input className="logmail" type="email" placeholder="El.Paštas" value={logmail} onChange={handleLogEmailChange} />
+            <input className="logpass" type="password" placeholder="Slaptažodis" value={logpass} onChange={handleLogPasswordChange} />
             <a className="additional1" href="#">Pamiršau slaptažodį</a>
             <button className="logregbutt">Prisijungti</button>
           </form>

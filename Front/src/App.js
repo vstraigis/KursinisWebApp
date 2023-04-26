@@ -12,7 +12,7 @@ import Weather from "./Pages/SideBarComps/Weather";
 import Calc from "./Pages/SideBarComps/FishingCalc";
 import Map from "./Pages/SideBarComps/Map";
 import Calendar from "./Pages/SideBarComps/SideCalendar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PrivateRoute from "./ProtectedRoute"; // Import PrivateRoute component
 
 function App() {
@@ -20,15 +20,20 @@ function App() {
   const [isAuth, setIsAuth] = useState(false);
 
   const authSetter = () => {
-    setIsAuth(true);
+    console.log("before", isAuth);
+    setIsAuth(!isAuth);
   };
+
+  useEffect(() => {
+    console.log("updated", isAuth);
+  }, [isAuth]);
 
   return (
     <div className="App">
       <Routes>
         <Route path="login" element={<LoginPage authChange={authSetter} />} />
         <Route path="/" element={<PrivateRoute isAuth={isAuth} />}>
-          <Route path="/" element={<DashSidebar />} >
+          <Route path="/" element={<DashSidebar authDelete={authSetter} />} >
             <Route index element={<Home />} />
             <Route path="chart1" element={<Chart1 />} />
             <Route path="chart2" element={<Chart2 />} />
