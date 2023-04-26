@@ -12,24 +12,35 @@ import Weather from "./Pages/SideBarComps/Weather";
 import Calc from "./Pages/SideBarComps/FishingCalc";
 import Map from "./Pages/SideBarComps/Map";
 import Calendar from "./Pages/SideBarComps/SideCalendar";
+import { useState } from "react";
+import PrivateRoute from "./ProtectedRoute"; // Import PrivateRoute component
 
 function App() {
+
+  const [isAuth, setIsAuth] = useState(false);
+
+  const authSetter = () => {
+    setIsAuth(true);
+  };
+
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<DashSidebar />}>
-          <Route index element={<Home />} />
-          <Route path="chart1" element={<Chart1 />} />
-          <Route path="chart2" element={<Chart2 />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="map" element={<Map />} />
-          <Route path="licenses" element={<Licenses />} />
-          <Route path="weather" element={<Weather />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="calc" element={<Calc />} />
+        <Route path="login" element={<LoginPage authChange={authSetter} />} />
+        <Route path="/" element={<PrivateRoute isAuth={isAuth} />}>
+          <Route path="/" element={<DashSidebar />} >
+            <Route index element={<Home />} />
+            <Route path="chart1" element={<Chart1 />} />
+            <Route path="chart2" element={<Chart2 />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="map" element={<Map />} />
+            <Route path="licenses" element={<Licenses />} />
+            <Route path="weather" element={<Weather />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="calc" element={<Calc />} />
+          </Route>
         </Route>
-        <Route path="login" element={<LoginPage />} />
       </Routes>
     </div>
   );

@@ -4,17 +4,55 @@ import ggbutt from "../assets/img/google-button.svg";
 import { useNavigate } from "react-router-dom";
 
 
-const FormPage = () => {
-  const [signin, setSignin] = useState(true);
 
-  
+const FormPage = ({authChange}) => {
+  const [signin, setSignin] = useState(true);
+ 
 
   const navigate = useNavigate();
 
-  const handleSignIn = (event) => {
+  const handleSignIn = async (event) => {
     event.preventDefault();
-    // Perform authentication logic here
-    navigate('/dashboard');
+
+    try {
+      // Perform authentication logic here
+      navigate('/dashboard');
+
+    } catch (error) {
+      console.log(error, "handleSignIn error");
+    }
+  };
+
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+
+    try {
+      // Perform authentication logic here
+
+      //const body = { regname, regmail, regpass };
+
+      const response = await fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: regname,
+          email: regmail,
+          password: regpass
+        }),
+      });
+
+      const parseRes = await response.json();
+      console.log(parseRes, "parseRes");
+
+      localStorage.setItem("token", parseRes.token);
+      
+      authChange();
+
+      navigate('/dashboard');
+
+    } catch (error) {
+      console.log(error, "handleSignUp error");
+    }
   };
 
 
@@ -39,7 +77,7 @@ const FormPage = () => {
     <div className="zama-form">
       <div className={`containermain ${!signin ? 'right-panel-active' : ''}`} id="containermain">
         <div className="form-container sign-up-container">
-        <form className="logregform">
+        <form className="logregform" action='#' onSubmit={handleSignUp} >
             <h1 className="reg-text">Registracija</h1>
             <div className="social-container">
               <a href="#" className="social"><img src={ggbutt} alt="Google" /></a>
