@@ -72,7 +72,7 @@ const DashSidebar = ({ authDelete }) => {
             Žemėlapis
           </MenuItem>
           <MenuItem component={<Link to="settings" className="link" />} icon={<SettingsApplicationsRoundedIcon />}> Nustatymai </MenuItem>
-          <MenuItem icon={<LogoutRoundedIcon onClick={() => {authDelete(); console.log("logout"); }} />}> Atsijungti </MenuItem>
+          <MenuItem icon={<LogoutRoundedIcon onClick={() => {authDelete()}} />}> Atsijungti </MenuItem>
         </Menu>
       </Sidebar>
       <div style={{ flexGrow: 1, padding: "1rem" }}>

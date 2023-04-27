@@ -1,10 +1,15 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// Components
 import LoginPage from "./Pages/LoginSignupPage";
 import DashSidebar from "./Pages/DashSidebar";
 import Home from "./Pages/SideBarComps/Home";
 import Dashboard from "./Pages/SideBarComps/Dashboard";
 import Licenses from "./Pages/SideBarComps/Licenses";
-import React from "react";
 import Chart1 from "./Pages/SideBarComps/Chart1";
 import Chart2 from "./Pages/SideBarComps/Chart2";
 import Settings from "./Pages/SideBarComps/Settings";
@@ -12,7 +17,7 @@ import Weather from "./Pages/SideBarComps/Weather";
 import Calc from "./Pages/SideBarComps/FishingCalc";
 import Map from "./Pages/SideBarComps/Map";
 import Calendar from "./Pages/SideBarComps/SideCalendar";
-import { useState, useEffect } from "react";
+
 import PrivateRoute from "./ProtectedRoute"; // Import PrivateRoute component
 
 function App() {
@@ -20,8 +25,13 @@ function App() {
   const [isAuth, setIsAuth] = useState(false);
 
   const authSetter = () => {
-    console.log("before", isAuth);
     setIsAuth(!isAuth);
+  };
+
+  const jwtRemove = () => {
+    localStorage.removeItem("token");
+    setIsAuth(false);
+    toast.success("Logged Out");
   };
 
   async function checkAuth() {
@@ -31,14 +41,20 @@ function App() {
         headers: { token: localStorage.token },
       });
 
+      if (response.status === 403) {
+        toast.error("Please Login");
+        return setIsAuth(false);
+        
+      }
+
       const parseRes = await response.json();
 
-      console.log(parseRes, "parseRes in checkAuth");
 
       parseRes === true ? setIsAuth(true) : setIsAuth(false);
 
     } catch (error) {
-      console.log(error, "checkAuth error");
+      // toast.error("Error Occured");
+      // console.log(error, "checkAuth error");
     }
   }
 
@@ -47,16 +63,14 @@ function App() {
   }, []);
 
 
-  useEffect(() => {
-    console.log("updated", isAuth);
-  }, [isAuth]);
 
   return (
     <div className="App">
+      <ToastContainer />
       <Routes>
         <Route path="login" element={<LoginPage isAuth={isAuth} authChange={authSetter} />} />
         <Route path="/" element={<PrivateRoute isAuth={isAuth} />}>
-          <Route path="/" element={<DashSidebar authDelete={authSetter} />} >
+          <Route path="/" element={<DashSidebar authDelete={jwtRemove} />} >
             <Route index element={<Home />} />
             <Route path="chart1" element={<Chart1 />} />
             <Route path="chart2" element={<Chart2 />} />

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./css/LoginSignupPage.css";
 import ggbutt from "../assets/img/google-button.svg";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 
 
 
-const FormPage = ({ isAuth, authChange }) => {
+const FormPage = ({ isAuth, authChange}) => {
   const [signin, setSignin] = useState(true);
 
 
@@ -32,15 +33,18 @@ const FormPage = ({ isAuth, authChange }) => {
         }),
       });
 
-      const parseRes = await response.json();
+      if (response.status === 401 || response.status === 403) {
+        toast.error("User does not exist or Password is incorrect");
+        return 0;
+      }
 
-      console.log(parseRes, "parseRes");
+      const parseRes = await response.json();
 
       localStorage.setItem("token", parseRes.token);
 
       authChange();
 
-
+      toast.success("Logged In");
       navigate('/dashboard');
 
     } catch (error) {
@@ -66,17 +70,23 @@ const FormPage = ({ isAuth, authChange }) => {
         }),
       });
 
+      if (response.status === 401) {
+        toast.error("Invalid input or email already exists");
+        return 0;
+      }
+
       const parseRes = await response.json();
-      console.log(parseRes, "parseRes");
 
       localStorage.setItem("token", parseRes.token);
+
+      toast.success("Registered");
 
       authChange();
 
       navigate('/dashboard');
 
     } catch (error) {
-      console.log(error, "handleSignUp error");
+      toast.error("Invalid input or email already exists");
     }
   };
 
@@ -107,7 +117,7 @@ const FormPage = ({ isAuth, authChange }) => {
     setLogPassword(event.target.value);
   };
 
-
+  const notify = () => toast.success("Paspausta!");
 
 
   return (
@@ -117,7 +127,7 @@ const FormPage = ({ isAuth, authChange }) => {
           <form className="logregform" action='#' onSubmit={handleSignUp} >
             <h1 className="reg-text">Registracija</h1>
             <div className="social-container">
-              <a href="#" className="social"><img src={ggbutt} alt="Google" /></a>
+              <a href="#" className="social" onClick={notify }><img src={ggbutt} alt="Google" /></a>
             </div>
             <span className="additional">arba registruokitės su paštu</span>
             <input className="regname" type="text" placeholder="Vardas" value={regname} onChange={handleNameChange} />
