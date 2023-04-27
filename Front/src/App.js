@@ -24,6 +24,29 @@ function App() {
     setIsAuth(!isAuth);
   };
 
+  async function checkAuth() {
+    try {
+      const response = await fetch("http://localhost:5000/auth/verify", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+
+      const parseRes = await response.json();
+
+      console.log(parseRes, "parseRes in checkAuth");
+
+      parseRes === true ? setIsAuth(true) : setIsAuth(false);
+
+    } catch (error) {
+      console.log(error, "checkAuth error");
+    }
+  }
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+
   useEffect(() => {
     console.log("updated", isAuth);
   }, [isAuth]);
@@ -31,7 +54,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="login" element={<LoginPage authChange={authSetter} />} />
+        <Route path="login" element={<LoginPage isAuth={isAuth} authChange={authSetter} />} />
         <Route path="/" element={<PrivateRoute isAuth={isAuth} />}>
           <Route path="/" element={<DashSidebar authDelete={authSetter} />} >
             <Route index element={<Home />} />

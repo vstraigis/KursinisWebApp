@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./css/LoginSignupPage.css";
 import ggbutt from "../assets/img/google-button.svg";
 import { useNavigate } from "react-router-dom";
 
 
 
-const FormPage = ({authChange}) => {
+
+const FormPage = ({ isAuth, authChange }) => {
   const [signin, setSignin] = useState(true);
- 
+
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/');
+    }
+  }, [isAuth, navigate]);
 
   const handleSignIn = async (event) => {
     event.preventDefault();
@@ -63,7 +70,7 @@ const FormPage = ({authChange}) => {
       console.log(parseRes, "parseRes");
 
       localStorage.setItem("token", parseRes.token);
-      
+
       authChange();
 
       navigate('/dashboard');
@@ -107,7 +114,7 @@ const FormPage = ({authChange}) => {
     <div className="zama-form">
       <div className={`containermain ${!signin ? 'right-panel-active' : ''}`} id="containermain">
         <div className="form-container sign-up-container">
-        <form className="logregform" action='#' onSubmit={handleSignUp} >
+          <form className="logregform" action='#' onSubmit={handleSignUp} >
             <h1 className="reg-text">Registracija</h1>
             <div className="social-container">
               <a href="#" className="social"><img src={ggbutt} alt="Google" /></a>
@@ -123,7 +130,7 @@ const FormPage = ({authChange}) => {
           <form className="logregform" action="#" onSubmit={handleSignIn} >
             <h1 className="log-text">Prisijungimas</h1>
             <div className="social-containerform">
-              <a href="#" className="social"><img src={ggbutt} alt="Google"/></a>
+              <a href="#" className="social"><img src={ggbutt} alt="Google" /></a>
             </div>
             <span className="additional">arba prisijunkite su paštu</span>
             <input className="logmail" type="email" placeholder="El.Paštas" value={logmail} onChange={handleLogEmailChange} />
