@@ -12,31 +12,32 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String
-  email        String    @unique
+  email        String      @unique
   password     String
-  role         Role      @default(USER)
+  role         Role        @default(USER)
   licenses     License[]
   trips        Trip[]
   visitedLakes LakeVisit[]
 }
 
 model License {
-  id     Int    @id @default(autoincrement())
+  id     Int  @id @default(autoincrement())
   userId Int
-  user   User   @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Trip {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
-  date       DateTime
+  id     Int      @id @default(autoincrement())
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
+  name   String
+  date   DateTime
 }
 
 model Lake {
-  id         Int        @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   x          Float
   y          Float
   isRented   Boolean
