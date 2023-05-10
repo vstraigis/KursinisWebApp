@@ -7,6 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import "../css/SideCalendar.css"
 import { useRef } from "react";
 import {
   Box,
@@ -20,7 +21,7 @@ import {
 // import Header from "../../components/Header";
 import { tokens } from "../../theme";
 
-const FishingCalc = () => {
+const SideCalendar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [currentEvents, setCurrentEvents] = useState([]);
@@ -33,7 +34,7 @@ const FishingCalc = () => {
       try {
         const response = await fetch("http://localhost:5000/dashboard/", {
           method: "GET",
-          headers: 
+          headers:
             { token: localStorage.token } // Replace with the actual token      
         });
         const { user } = await response.json();
@@ -43,7 +44,7 @@ const FishingCalc = () => {
         console.error("Error fetching user ID:", error);
       }
     };
-  
+
     fetchUserId();
   }, []);
 
@@ -51,7 +52,10 @@ const FishingCalc = () => {
   const loadTrips = async () => {
     if (!userId) return;
     try {
-      const response = await fetch(`http://localhost:5000/trips/${userId}`); // Replace `1` with the actual user ID
+      const response = await fetch(`http://localhost:5000/trips/${userId}`, {
+        method: 'GET',
+        headers: { token: localStorage.token } 
+      }); 
       const trips = await response.json();
       console.log('Loaded trips:', trips);
 
@@ -74,8 +78,9 @@ const FishingCalc = () => {
   useEffect(() => {
     if (!initialEventsLoaded.current && userId) {
       loadTrips();
-      initialEventsLoaded.current = true;}
-    }, [userId]);
+      initialEventsLoaded.current = true;
+    }
+  }, [userId]);
 
   const handleDateClick = (selected) => {
     const title = prompt("Įveskite įvykio pavadinimą");
@@ -103,8 +108,9 @@ const FishingCalc = () => {
         // Send a DELETE request to the server
         await fetch(`http://localhost:5000/trips/${selected.event.id}`, {
           method: 'DELETE',
+          headers: { token: localStorage.token } 
         });
-  
+
         // Remove the event from the calendar
         selected.event.remove();
         toast.success('Trip deleted!');
@@ -119,7 +125,11 @@ const FishingCalc = () => {
 
     try {
       // Load the trips from the database
-      const response = await fetch(`http://localhost:5000/trips/14`);
+      const response = await fetch(`http://localhost:5000/trips/${userId}`, {
+        method: 'GET',
+        headers: { token: localStorage.token } 
+
+      });
       const trips = await response.json();
       const tripEventStartTimes = trips.map((trip) => trip.date);
 
@@ -133,6 +143,7 @@ const FishingCalc = () => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              token: localStorage.token,
             },
             body: JSON.stringify({
               userId, // Replace with the actual user ID
@@ -159,12 +170,12 @@ const FishingCalc = () => {
         {/* CALENDAR SIDEBAR */}
         <Box
           flex="1 1 20%"
-          backgroundColor={colors.primary[400]}
           p="15px"
           borderRadius="4px"
+          className="glass"
         >
-          <Typography variant="h5">Events</Typography>
-          <List>
+          <Typography className="glass" variant="h5">Events</Typography>
+          <List >
             {currentEvents.map((event, index) => (
               <ListItem
                 key={`${event.id}-${index}`} // Use a unique key combining the event ID and the index
@@ -192,7 +203,7 @@ const FishingCalc = () => {
         </Box>
 
         {/* CALENDAR */}
-        <Box flex="1 1 100%" ml="15px">
+        <Box flex="1 1 100%" ml="15px" className="glass">
           <FullCalendar
             ref={calendarRef}
             height="75vh"
@@ -234,4 +245,4 @@ const FishingCalc = () => {
   );
 };
 
-export default FishingCalc;
+export default SideCalendar;

@@ -9,9 +9,14 @@ const containerStyle = {
 const sidebarStyle = {
   width: '34%',
   height: '100vh',
-  backgroundColor: '#f0f0f0',
   padding: '10px',
   overflowY: 'auto',
+  background: "rgba(195, 181, 181, 0.4)",
+  backdropFilter: "blur(10px)",
+  borderRadius: "10px 0px 0px 10px",
+  padding: "1rem",
+  border: "1px solid black",
+  borderRight: "none",
 };
 
 const center = {
@@ -55,7 +60,10 @@ const Map = () => {
 
   const fetchVisitedLakes = async (fetchedUserId) => {
     try {
-      const response = await fetch(`http://localhost:5000/visited-lakes/${fetchedUserId}`);
+      const response = await fetch(`http://localhost:5000/visited-lakes/${fetchedUserId}`, {
+        method: "GET",
+        headers: { token: localStorage.token } // Replace with the actual token      
+      });
       const data = await response.json();
       setVisitedLakes(data);
     } catch (error) {
@@ -93,6 +101,7 @@ const Map = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        token : localStorage.token
       },
       body: JSON.stringify({ userId, lakeIds }),
     });

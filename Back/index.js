@@ -2,6 +2,8 @@ const express = require('express');
 const db = require('./db');
 const app = express();
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const authorization = require('./middleware/authorization');
 
 // Middleware
 app.use(express.json()); // req.body
@@ -21,6 +23,8 @@ app.use('/auth', require('./routes/jwtAuth'));
 // Dashboard route
 app.use('/dashboard', require('./routes/dashboard'));
 
+app.use("/licenses", require("./routes/licenseRoutes"));
+
 app.get('/lakedata', async (req, res) => {
   try {
     const search = req.query.search;
@@ -28,11 +32,11 @@ app.get('/lakedata', async (req, res) => {
     const allLakes = await db.lake.findMany({
       where: search
         ? {
-            name: {
-              contains: search,
-              mode: 'insensitive', // Use 'insensitive' for case-insensitive search
-            },
-          }
+          name: {
+            contains: search,
+            mode: 'insensitive', // Use 'insensitive' for case-insensitive search
+          },
+        }
         : {},
       include: { lakeVisits: true },
     });
@@ -44,7 +48,7 @@ app.get('/lakedata', async (req, res) => {
   }
 });
 
-app.post('/trips', async (req, res) => {
+app.post('/trips', authorization, async (req, res) => {
   try {
     // Get trip data from request body
     const { userId, date, events } = req.body;
@@ -71,7 +75,7 @@ app.post('/trips', async (req, res) => {
 });
 
 //get user info
-app.get('/user/:userId', async (req, res) => {
+app.get('/user/:userId', authorization, async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -89,7 +93,7 @@ app.get('/user/:userId', async (req, res) => {
 });
 
 // Get all trips for a user
-app.get('/trips/:userId', async (req, res) => {
+app.get('/trips/:userId', authorization, async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -108,7 +112,7 @@ app.get('/trips/:userId', async (req, res) => {
 });
 
 // Delete a trip by ID
-app.delete('/trips/:tripId', async (req, res) => {
+app.delete('/trips/:tripId', authorization, async (req, res) => {
   try {
     const { tripId } = req.params;
     await db.trip.delete({ where: { id: parseInt(tripId) } });
@@ -119,7 +123,7 @@ app.delete('/trips/:tripId', async (req, res) => {
   }
 });
 
-app.post('/save-lakes', async (req, res) => {
+app.post('/save-lakes', authorization, async (req, res) => {
   try {
     const { userId, lakeIds } = req.body;
 
@@ -141,7 +145,7 @@ app.post('/save-lakes', async (req, res) => {
   }
 });
 
-app.get('/visited-lakes/:userId', async (req, res) => {
+app.get('/visited-lakes/:userId', authorization, async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -160,6 +164,94 @@ app.get('/visited-lakes/:userId', async (req, res) => {
     res.status(500).send('Error fetching visited lakes');
   }
 });
+
+
+app.put('/user/:id/update',authorization, async (req, res) => {
+  // Update user information logic here
+  console.log(req.body);
+  const { id } = req.params;
+  const { firstName, lastName, birthDate } = req.body;
+
+  try {
+    const updatedUser = await db.user.update({
+      where: { id: parseInt(id) },
+      data: {
+        name: firstName,
+        lastName: lastName,
+        birthDay: new Date(birthDate),
+      },
+    });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: 'Error updating user information' });
+  }
+});
+
+app.put('/user/:id/changepassword', authorization, async (req, res) => {
+  const { id } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Encrypt the new password
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const encryptedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the user password in the database
+    const updatedUser = await db.user.update({
+      where: { id: parseInt(id) },
+      data: { password: encryptedPassword },
+    });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ error: 'Error changing user password' });
+  }
+});
+
+app.delete("/user/:id/delete", authorization, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Delete the associated lake visits
+    await db.lakeVisit.deleteMany({
+      where: {
+        userId: parseInt(id),
+      },
+    });
+
+    // Delete the associated licenses
+    await db.license.deleteMany({
+      where: {
+        userId: parseInt(id),
+      },
+    });
+    // Delete the associated trips
+    await db.trip.deleteMany({
+      where: {
+         userId: parseInt(id), 
+        },
+      });
+
+    // Delete the user
+    const deletedUser = await db.user.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    res.json({ message: "User deleted" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Error deleting user" });
+  }
+});
+
+
+
+//--------------------------------------------------------------------------//
 
 // Example usage with Prisma:
 app.get('/users', async (req, res) => {

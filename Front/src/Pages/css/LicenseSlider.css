@@ -1,0 +1,80 @@
+
+
+.license-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+
+}
+
+.license-container {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  /*linear background*/
+  background-color: linear-gradient(
+    to right,
+    rgba(66, 51, 159, 0) 100%,
+    rgb(103, 150, 178) 0%
+  );
+}
+
+.license {
+  flex: 1;
+  margin: 0 1rem;
+  min-height: 50vh;
+  min-width: 15vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: rgba(195, 181, 181, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  border: 3px solid black;
+}
+
+.sliderbutton {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 10vw;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 0.5rem;
+}
+
+.dateInput {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 0.5rem;
+}
+
+.textInput {
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  padding: 0.5rem;
+  height: 100px; /* set a fixed height for testing purposes */
+  overflow-x: hidden;
+  overflow-y: scroll;
+  white-space: pre-wrap;
+}
+
+.sliderbutton:hover {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.sliderbutton:active {
+    transform: scale(0.95);
+}
+
+/* * {
+  border: 2px solid red;
+} */

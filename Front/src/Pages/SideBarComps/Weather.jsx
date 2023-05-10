@@ -60,15 +60,16 @@ const Weather = () => {
   };
 
   return (
-    <div>
+    <div className='weatherContent'>
       <AsyncSelect
         loadOptions={loadLakes}
         onChange={handleSelectChange}
         isSearchable={true}
         placeholder="Search for a lake..."
+        className='weatherSelect'
       />
       {selectedLake && weather && (
-        <div>
+        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
           <h3>{selectedLake.name}</h3>
           {renderForecast()}
         </div>

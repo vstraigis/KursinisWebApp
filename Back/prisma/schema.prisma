@@ -14,18 +14,23 @@ datasource db {
 model User {
   id           Int         @id @default(autoincrement())
   name         String
+  lastName     String?
   email        String      @unique
   password     String
   role         Role        @default(USER)
   licenses     License[]
   trips        Trip[]
   visitedLakes LakeVisit[]
+  birthDay     DateTime?
 }
 
 model License {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  description String?
 }
 
 model Trip {

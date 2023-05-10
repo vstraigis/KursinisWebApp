@@ -2,16 +2,17 @@ import React from "react";
 import { Sidebar, Menu, MenuItem, SubMenu, useProSidebar } from "react-pro-sidebar";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
+import CalculateIcon from '@mui/icons-material/Calculate';
 import ReceiptRoundedIcon from "@mui/icons-material/ReceiptRounded";
 import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
 import TimelineRoundedIcon from "@mui/icons-material/TimelineRounded";
 import BubbleChartRoundedIcon from "@mui/icons-material/BubbleChartRounded";
-import WalletRoundedIcon from "@mui/icons-material/WalletRounded";
-import AccountBalanceRoundedIcon from "@mui/icons-material/AccountBalanceRounded";
-import SavingsRoundedIcon from "@mui/icons-material/SavingsRounded";
-import MonetizationOnRoundedIcon from "@mui/icons-material/MonetizationOnRounded";
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SettingsApplicationsRoundedIcon from "@mui/icons-material/SettingsApplicationsRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import AirIcon from '@mui/icons-material/Air';
 import "./css/DashSidebar.css"
 import { Link, Outlet } from "react-router-dom";
 
@@ -53,21 +54,21 @@ const DashSidebar = ({ authDelete }) => {
             <MenuItem component={<Link to="chart1" className="link" />} icon={<TimelineRoundedIcon />}> 1 Lentelė </MenuItem>
             <MenuItem component={<Link to="chart2" className="link" />} icon={<BubbleChartRoundedIcon />}>2 Lentelė</MenuItem>
           </SubMenu>
-          <SubMenu label="Orai" icon={<WalletRoundedIcon />}>
-            <MenuItem component={<Link to="weather" className="link" />} icon={<AccountBalanceRoundedIcon />}>
+          <SubMenu label="Orai" icon={<ThermostatIcon />}>
+            <MenuItem component={<Link to="weather" className="link" />} icon={<AirIcon />}>
               Orai
             </MenuItem>
-            <MenuItem component={<Link to="calc" className="link" />} icon={<SavingsRoundedIcon />}>Kibimo rodiklis</MenuItem>
+            <MenuItem component={<Link to="calc" className="link" />} icon={<CalculateIcon />}>Kibimo rodiklis</MenuItem>
           </SubMenu>
           <MenuItem
             component={<Link to="calendar" className="link" />}
-            icon={<MonetizationOnRoundedIcon />}
+            icon={<CalendarMonthIcon />}
           >
             Kalendorius
           </MenuItem>
           <MenuItem
             component={<Link to="map" className="link" />}
-            icon={<MonetizationOnRoundedIcon />}
+            icon={<AddLocationAltIcon />}
           >
             Žemėlapis
           </MenuItem>
@@ -75,7 +76,7 @@ const DashSidebar = ({ authDelete }) => {
           <MenuItem icon={<LogoutRoundedIcon onClick={() => {authDelete()}} />}> Atsijungti </MenuItem>
         </Menu>
       </Sidebar>
-      <div style={{ flexGrow: 1, padding: "1rem" }}>
+      <div className="contentContainer" style={{ flexGrow: 1, padding: "1rem" }}>
         <Outlet />
       </div>
     </div>

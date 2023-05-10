@@ -4,7 +4,7 @@ const fs = require('fs');
 const prisma = new PrismaClient();
 
 async function main() {
-  const lakes = JSON.parse(fs.readFileSync('C:/Users/valst/Desktop/Stud/Kursinis/KursinisWebApp/Front/src/assets/additional/lakes.json'));
+  const lakes = JSON.parse(fs.readFileSync('C:/Users/valst/Desktop/Stud/Kursinis/KursinisWebApp/Front/lakes.json'));
 
   for (const lake of lakes) {
     await prisma.lake.create({

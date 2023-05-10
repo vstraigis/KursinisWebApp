@@ -74,7 +74,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="chart1" element={<Chart1 />} />
             <Route path="chart2" element={<Chart2 />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="settings" element={<Settings authDelete={jwtRemove} />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="map" element={<Map />} />
             <Route path="licenses" element={<Licenses />} />

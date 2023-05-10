@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/Settings.css";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-const Settings = () => {
+
+const Settings = ({ authDelete }) => {
   const [state, setState] = useState({
     firstName: "",
     lastName: "",
@@ -11,6 +14,26 @@ const Settings = () => {
     confirmPassword: "",
   });
 
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/dashboard/", {
+          method: "GET",
+          headers: { token: localStorage.token } // Replace with the actual token      
+        });
+        const { user } = await response.json();
+        console.log("User :", user);
+        setUserId(user.id);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, [])
+
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -19,20 +42,59 @@ const Settings = () => {
     setState({ ...state, showChangePassword: !state.showChangePassword });
   };
 
-  const saveNewPassword = () => {
+  const saveNewPassword = async () => {
     if (state.newPassword === state.confirmPassword) {
-      alert(`New password saved: ${state.newPassword}`);
+      try {
+          await axios.put(`http://localhost:5000/user/${userId}/changepassword`, {
+          newPassword: state.newPassword,
+        }, {
+          headers: { token: localStorage.token }
+        });
+
+        alert(`New password saved: ${state.newPassword}`);
+        toast.success("New password saved");
+      } catch (error) {
+        alert("Error saving new password");
+        toast.error("Error saving new password");
+      }
     } else {
       alert("Passwords do not match");
+      toast.error("Passwords do not match");
     }
   };
 
-  const saveChanges = () => {
-    alert("Changes saved");
+  const saveChanges = async () => {
+    const payload = {};
+    if (state.firstName) payload.firstName = state.firstName;
+    if (state.lastName) payload.lastName = state.lastName;
+    if (state.birthDate) payload.birthDate = state.birthDate;
+  
+    if (Object.keys(payload).length > 0) {
+      try {
+        await axios.put(`http://localhost:5000/user/${userId}/update`, payload , {
+          headers: { token: localStorage.token } 
+        });
+        toast.success("Changes saved");
+      } catch (error) {
+        toast.error("Error saving changes");
+      }
+    } else {
+      alert("No changes to save");
+      toast.error("No changes to save");
+    }
   };
 
-  const deleteAccount = () => {
-    alert("Delete account clicked");
+  const deleteAccount = async () => {
+    try {
+      await axios.delete(`http://localhost:5000/user/${userId}/delete`, {
+        headers: { token: localStorage.token }
+        });
+      toast.success("Account deleted");
+      // Redirect to the login page or any other appropriate page
+      authDelete();
+    } catch (error) {
+      toast.error("Error deleting account");
+    }
   };
 
   return (

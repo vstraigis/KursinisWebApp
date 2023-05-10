@@ -1,0 +1,54 @@
+
+
+.license-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+
+}
+
+.license-container {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  /*linear background*/
+  background-color: linear-gradient(
+    to right,
+    rgba(66, 51, 159, 0) 100%,
+    rgb(103, 150, 178) 0%
+  );
+}
+
+.license {
+  flex: 1;
+  margin: 0 1rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  min-height: 50vh;
+  min-width: 15vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgb(41, 35, 156) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  border-radius: 20px;
+}
+
+.sliderbutton {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 10vw;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 0.5rem;
+}
