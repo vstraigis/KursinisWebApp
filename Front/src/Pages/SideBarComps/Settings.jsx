@@ -45,7 +45,7 @@ const Settings = ({ authDelete }) => {
   const saveNewPassword = async () => {
     if (state.newPassword === state.confirmPassword) {
       try {
-          await axios.put(`http://localhost:5000/user/${userId}/changepassword`, {
+        await axios.put(`http://localhost:5000/user/${userId}/changepassword`, {
           newPassword: state.newPassword,
         }, {
           headers: { token: localStorage.token }
@@ -68,11 +68,11 @@ const Settings = ({ authDelete }) => {
     if (state.firstName) payload.firstName = state.firstName;
     if (state.lastName) payload.lastName = state.lastName;
     if (state.birthDate) payload.birthDate = state.birthDate;
-  
+
     if (Object.keys(payload).length > 0) {
       try {
-        await axios.put(`http://localhost:5000/user/${userId}/update`, payload , {
-          headers: { token: localStorage.token } 
+        await axios.put(`http://localhost:5000/user/${userId}/update`, payload, {
+          headers: { token: localStorage.token }
         });
         toast.success("Changes saved");
       } catch (error) {
@@ -88,7 +88,7 @@ const Settings = ({ authDelete }) => {
     try {
       await axios.delete(`http://localhost:5000/user/${userId}/delete`, {
         headers: { token: localStorage.token }
-        });
+      });
       toast.success("Account deleted");
       // Redirect to the login page or any other appropriate page
       authDelete();
@@ -99,71 +99,75 @@ const Settings = ({ authDelete }) => {
 
   return (
     <div className="settings">
-      <h1 className="settings__title">Settings</h1>
-      <form className="settings__form">
-        <label className="settings__label">
-          First Name:
-          <input
-            type="text"
-            name="firstName"
-            value={state.firstName}
-            onChange={handleChange}
-            className="settings__input"
-          />
-        </label>
-        <label className="settings__label">
-          Last Name:
-          <input
-            type="text"
-            name="lastName"
-            value={state.lastName}
-            onChange={handleChange}
-            className="settings__input"
-          />
-        </label>
-        <label className="settings__label">
-          Birth Date:
-          <input
-            type="date"
-            name="birthDate"
-            value={state.birthDate}
-            onChange={handleChange}
-            className="settings__input"
-          />
-        </label>
-      </form>
-      <button onClick={changePassword} className="settings__button">
-        Change Password
-      </button>
-      {state.showChangePassword && (
-        <div className="settings__password">
-          <input
-            type="password"
-            name="newPassword"
-            value={state.newPassword}
-            onChange={handleChange}
-            className="settings__input"
-            placeholder="New password"
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            value={state.confirmPassword}
-            onChange={handleChange}
-            className="settings__input"
-            placeholder="Confirm password"
-          />
-          <button onClick={saveNewPassword} className="settings__button">
-            Save
-          </button>
-        </div>
-      )}
-      <button onClick={saveChanges} className="settings__button">
-        Save Changes
-      </button>
-      <button onClick={deleteAccount} className="settings__button">
-        Delete Account
-      </button>
+      <div className="settings__container">
+        <h1 className="settings__title">Settings</h1>
+        <form className="settings__form">
+          <label className="settings__label">
+            First Name:
+            <input
+              type="text"
+              name="firstName"
+              value={state.firstName}
+              onChange={handleChange}
+              className="settings__input"
+            />
+          </label>
+          <label className="settings__label">
+            Last Name:
+            <input
+              type="text"
+              name="lastName"
+              value={state.lastName}
+              onChange={handleChange}
+              className="settings__label settings__input"
+
+            />
+          </label>
+          <label className="settings__label">
+            Birth Date:
+            <input
+              type="date"
+              name="birthDate"
+              value={state.birthDate}
+              onChange={handleChange}
+              className="settings__input"
+
+            />
+          </label>
+        </form>
+        <button onClick={changePassword} className="settings__button">
+          Change Password
+        </button>
+        {state.showChangePassword && (
+          <div className="settings__password">
+            <input
+              type="password"
+              name="newPassword"
+              value={state.newPassword}
+              onChange={handleChange}
+              className="settings__input"
+              placeholder="New password"
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={state.confirmPassword}
+              onChange={handleChange}
+              className="settings__input"
+              placeholder="Confirm password"
+            />
+            <button onClick={saveNewPassword} className="settings__button">
+              Save
+            </button>
+          </div>
+        )}
+        <button onClick={saveChanges} className="settings__button">
+          Save Changes
+        </button>
+        <button onClick={deleteAccount} className="settings__button">
+          Delete Account
+        </button>
+      </div>
     </div>
   );
 };

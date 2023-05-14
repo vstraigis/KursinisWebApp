@@ -249,8 +249,47 @@ app.delete("/user/:id/delete", authorization, async (req, res) => {
   }
 });
 
+app.get('/admin/lakes', authorization, async (req, res) => {
+  try {
+    const lakes = await db.lake.findMany();
+    res.json(lakes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching lakes');
+  }
+});
 
+app.put('/admin/lakes/:id', authorization, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    const { name, isRented, isPrivate } = req.body;
 
+    await db.lake.update({
+      where: { id },
+      data: { name, isRented, isPrivate },
+    });
+
+    res.status(200).send('Lake updated successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating lake');
+  }
+});
+
+app.delete('/admin/lakes/:id', authorization, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+
+    await db.lake.delete({
+      where: { id },
+    });
+
+    res.status(200).send('Lake deleted successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error deleting lake');
+  }
+});
 //--------------------------------------------------------------------------//
 
 // Example usage with Prisma:

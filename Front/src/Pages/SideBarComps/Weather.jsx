@@ -37,13 +37,23 @@ const Weather = () => {
       reading.dt_txt.includes('18:00:00')
     );
 
-    const forecastElements = dailyData.slice(0, 5).map((day, index) => (
-      <div key={index} className="weather-rectangle">
-        <h4>{new Date(day.dt_txt).toLocaleDateString()}</h4>
-        <p>Oras: {day.weather[0].description}</p>
-        <p>Temperatūra: {Math.round(day.main.temp - 273.15)}°C</p>
-      </div>
-    ));
+    const forecastElements = dailyData.slice(0, 5).map((day, index) => {
+      const temperature = Math.round(day.main.temp - 273.15);
+      const cloudCover = day.clouds.all;
+      const windSpeed = day.wind.speed;
+      const isGoodFishingTime = temperature > 15 && cloudCover > 30 && windSpeed >= 2 && windSpeed <= 15;
+
+      return (
+        <div key={index} className="weather-rectangle">
+          <h4>{new Date(day.dt_txt).toLocaleDateString()}</h4>
+          <p>Weather: {day.weather[0].description}</p>
+          <p>Temperature: {temperature}°C</p>
+          <p>Cloud Cover: {cloudCover}%</p>
+          <p>Wind Speed: {windSpeed} km/h</p>
+          {isGoodFishingTime ? <p>Puikus laikas žvejybai!</p> : <p>Netinkamas metas žvejybai</p>}
+        </div>
+      );
+    });
 
     return (
       <div className="forecast">

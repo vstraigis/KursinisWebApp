@@ -17,6 +17,7 @@ import Weather from "./Pages/SideBarComps/Weather";
 import Calc from "./Pages/SideBarComps/FishingCalc";
 import Map from "./Pages/SideBarComps/Map";
 import Calendar from "./Pages/SideBarComps/SideCalendar";
+import AdminPanel from "./Pages/SideBarComps/AdminPanel";
 
 import PrivateRoute from "./ProtectedRoute"; // Import PrivateRoute component
 
@@ -81,6 +82,7 @@ function App() {
             <Route path="weather" element={<Weather />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="calc" element={<Calc />} />
+            <Route path="admin" element={<AdminPanel />} />
           </Route>
         </Route>
       </Routes>

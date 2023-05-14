@@ -11,3 +11,6 @@ const Chart1 = () => {
   };
 
   export default Chart1;
+
+  // 4. Visited Lakes Distribution: Create a pie chart or a map showing the distribution of visited lakes by the user.
+  // 1. Number of Licenses: Show a count of the total licenses a user has.

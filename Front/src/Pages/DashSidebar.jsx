@@ -54,12 +54,12 @@ const DashSidebar = ({ authDelete }) => {
             <MenuItem component={<Link to="chart1" className="link" />} icon={<TimelineRoundedIcon />}> 1 Lentelė </MenuItem>
             <MenuItem component={<Link to="chart2" className="link" />} icon={<BubbleChartRoundedIcon />}>2 Lentelė</MenuItem>
           </SubMenu>
-          <SubMenu label="Orai" icon={<ThermostatIcon />}>
+          {/* <SubMenu label="Orai" icon={<ThermostatIcon />}> */}
             <MenuItem component={<Link to="weather" className="link" />} icon={<AirIcon />}>
               Orai
             </MenuItem>
-            <MenuItem component={<Link to="calc" className="link" />} icon={<CalculateIcon />}>Kibimo rodiklis</MenuItem>
-          </SubMenu>
+            {/* <MenuItem component={<Link to="calc" className="link" />} icon={<CalculateIcon />}>Kibimo rodiklis</MenuItem> */}
+          {/* </SubMenu> */}
           <MenuItem
             component={<Link to="calendar" className="link" />}
             icon={<CalendarMonthIcon />}
@@ -74,6 +74,7 @@ const DashSidebar = ({ authDelete }) => {
           </MenuItem>
           <MenuItem component={<Link to="settings" className="link" />} icon={<SettingsApplicationsRoundedIcon />}> Nustatymai </MenuItem>
           <MenuItem icon={<LogoutRoundedIcon onClick={() => {authDelete()}} />}> Atsijungti </MenuItem>
+          <MenuItem component={<Link to="admin" className="link" />} icon={<SettingsApplicationsRoundedIcon />}> Admin </MenuItem>
         </Menu>
       </Sidebar>
       <div className="contentContainer" style={{ flexGrow: 1, padding: "1rem" }}>

@@ -82,22 +82,42 @@ const SideCalendar = () => {
     }
   }, [userId]);
 
-  const handleDateClick = (selected) => {
+  const handleDateClick = async (selected) => {
     const title = prompt("Įveskite įvykio pavadinimą");
     const calendarApi = selected.view.calendar;
     calendarApi.unselect();
-
+  
     if (title) {
-      calendarApi.addEvent({
+      const newEvent = {
         id: `${selected.dateStr}-${title}`,
         title,
         start: selected.startStr,
         end: selected.endStr,
         allDay: selected.allDay,
-      });
+      };
+      calendarApi.addEvent(newEvent);
+  
+      // Save the event automatically
+      try {
+        const response = await fetch('http://localhost:5000/trips', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: localStorage.token,
+          },
+          body: JSON.stringify({
+            userId, // Replace with the actual user ID
+            date: newEvent.start,
+            events: [{ title: newEvent.title }],
+          }),
+        });
+        await response.json();
+        toast.success('Trip saved!');
+      } catch (error) {
+        console.error('Error saving trip:', error);
+      }
     }
   };
-
   const handleEventClick = async (selected) => {
     if (
       window.confirm(
@@ -120,52 +140,10 @@ const SideCalendar = () => {
     }
   };
 
-  const saveTrip = async () => {
-    if (!userId) return;
-
-    try {
-      // Load the trips from the database
-      const response = await fetch(`http://localhost:5000/trips/${userId}`, {
-        method: 'GET',
-        headers: { token: localStorage.token } 
-
-      });
-      const trips = await response.json();
-      const tripEventStartTimes = trips.map((trip) => trip.date);
-
-      // Loop through currentEvents and save each event as a separate trip
-      console.log('Saving trip:', currentEvents);
-      for (const event of currentEvents) {
-        // Check if the event is already saved in the database based on start time
-        const eventStartTime = event.start.toISOString();
-        if (!tripEventStartTimes.includes(eventStartTime)) {
-          const response = await fetch('http://localhost:5000/trips', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: localStorage.token,
-            },
-            body: JSON.stringify({
-              userId, // Replace with the actual user ID
-              date: eventStartTime,
-              events: [{ title: event.title }],
-            }),
-          });
-          await response.json();
-          toast.success('Trip saved!');
-        }
-      }
-    } catch (error) {
-      console.error('Error saving trip:', error);
-    }
-  };
 
 
   return (
     <Box m="20px">
-      <Button variant="contained" color="primary" onClick={saveTrip}>
-        Save
-      </Button>
       <Box display="flex" justifyContent="space-between">
         {/* CALENDAR SIDEBAR */}
         <Box
