@@ -5,6 +5,8 @@ import { toast } from 'react-toastify';
 const Licenses = () => {
   const [licenses, setLicenses] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [inputValues, setInputValues] = useState({});
+
 
   const formatDate = (dateString) => {
     if (!dateString) {
@@ -22,8 +24,22 @@ const Licenses = () => {
 
   const addLicense = () => {
     const tempId = -1 * (licenses.filter((license) => license.id < 0).length + 1);
-    setLicenses([...licenses, { id: tempId }]);
+    const currentDate = formatDate(new Date());
+    const newLicense = {
+      id: tempId,
+      startDate: currentDate,
+      endDate: currentDate,
+      description: "",
+    };
+    setLicenses([...licenses, newLicense]);
   };
+
+  useEffect(() => {
+    const newLicense = licenses.find(license => license.id < 0);
+    if (newLicense) {
+      saveLicense(newLicense);
+    }
+  }, [licenses]);
 
   const removeLicense = (id) => {
     setLicenses(licenses.filter((license) => license.id !== id));
@@ -75,10 +91,38 @@ const Licenses = () => {
   };
 
   const handleDateChange = (licenseId, dateType, newDate) => {
+    if (!newDate) {
+      return;
+    }
+  
+    const originalLicense = licenses.find((license) => license.id === licenseId);
+    console.log(originalLicense, dateType, newDate)
+    if (originalLicense) {
+      const originalDate = originalLicense[dateType];
+  
+      // If the date has not changed, return without updating the state or saving the license
+      if (originalDate === newDate) {
+        return;
+      }
+  
+      // Check if the newDate is a valid date
+      const date = new Date(newDate);
+      if (isNaN(date.getTime())) {
+        // Show an error message if the date is not valid
+        toast.error('Neteisinga datos reikšmė');
+        return;
+      }
+    }
+  
     const updatedLicenses = licenses.map((license) =>
       license.id === licenseId ? { ...license, [dateType]: newDate } : license
     );
     setLicenses(updatedLicenses);
+  
+    if (licenseId >= 0) {
+      const updatedLicense = updatedLicenses.find((license) => license.id === licenseId);
+      saveLicense(updatedLicense);
+    }
   };
 
   const handleDescriptionChange = (licenseId, newDescription) => {
@@ -86,6 +130,11 @@ const Licenses = () => {
       license.id === licenseId ? { ...license, description: newDescription } : license
     );
     setLicenses(updatedLicenses);
+
+    if (licenseId >= 0) {
+      const updatedLicense = updatedLicenses.find((license) => license.id === licenseId);
+      saveLicense(updatedLicense);
+    }
   };
 
   const fetchLicenses = async () => {
@@ -107,38 +156,64 @@ const Licenses = () => {
     }
   };
 
-  
-  const saveLicenses = async () => {
+  const saveLicense = async (licenseData) => {
     try {
-      // Separate new and existing licenses
-      const newLicenses = licenses.filter((license) => license.id < 0);
-      const existingLicenses = licenses.filter((license) => license.id >= 0);
-  
-      const response = await fetch(`http://localhost:5000/licenses/${userId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.token,
-        },
-        body: JSON.stringify({ newLicenses, existingLicenses }), // Send both new and existing licenses
-      });
-  
-      const updatedLicenses = await response.json();
-      console.log("Updated licenses:", updatedLicenses);
-  
-      // Format the dates before setting the state
-      const formattedLicenses = updatedLicenses.map((license) => ({
-        ...license,
-        startDate: formatDate(license.startDate),
-        endDate: formatDate(license.endDate),
-      }));
-  
-      // Set the local licenses with the updated licenses
-      setLicenses(formattedLicenses);
-      toast.success("Leidimai išsaugoti");
+      
+      let response;
+      if (licenseData.id >= 0) {
+        // Update the existing license
+        response = await fetch(`http://localhost:5000/licenses/${userId}/${licenseData.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.token,
+          },
+          body: JSON.stringify(licenseData), // Send a single license
+        });
+
+      } else {
+        // Save a new license
+        response = await fetch(`http://localhost:5000/licenses/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.token,
+          },
+          body: JSON.stringify(licenseData), // Send a single license
+        });
+      }
+
+      const updatedLicense = await response.json();
+      console.log("Updated license:", updatedLicense);
+
+      // Format the dates before returning the license
+      const formattedLicense = {
+        ...updatedLicense,
+        startDate: formatDate(updatedLicense.startDate),
+        endDate: formatDate(updatedLicense.endDate),
+      };
+
+      // Update the local state with the new license id
+      setLicenses(
+        licenses.map((license) =>
+          license.id === licenseData.id ? formattedLicense : license
+        )
+      );
+
+      // If the license was added, update the local state with the new license id
+      if (licenseData.id < 0) {
+        setLicenses(
+          licenses.map((license) =>
+            license.id === licenseData.id ? formattedLicense : license
+          )
+        );
+      }
+
+      toast.success("Leidimas išsaugotas");
+      return formattedLicense;
     } catch (error) {
-      console.error("Error saving licenses:", error);
-      toast.error("Klaida išsaugant leidimus");
+      console.error("Error saving license:", error);
+      toast.error("Klaida išsaugant leidimą");
     }
   };
 
@@ -149,7 +224,7 @@ const Licenses = () => {
       toast.success("Leidimas ištrintas");
       return;
     }
-  
+
     try {
       const response = await fetch(`http://localhost:5000/licenses/${userId}/${licenseId}`, {
         method: "DELETE",
@@ -176,32 +251,43 @@ const Licenses = () => {
         <div className="license-slider">
           <button className='sliderbutton' onClick={prevLicense}>Ankst.</button>
           <div className="license-container">
-          {licenses.slice(displayIndex, displayIndex + 3).map((license, index) => (
+            {licenses.slice(displayIndex, displayIndex + 3).map((license, index) => (
               <div className="license" key={index}>
                 <p>Leidimas</p>
                 <label htmlFor={`start-date-${license.id}`}>Pradžia:</label>
                 <input
                   type="date"
-                  className='dateInput'
+                  className="dateInput"
                   id={`start-date-${license.id}`}
-                  value={license.startDate || ''}
-                  onChange={(e) => handleDateChange(license.id, 'startDate', e.target.value)}
+                  value={inputValues[`start-${license.id}`] || license.startDate || ""}
+                  onChange={(e) =>
+                    setInputValues({ ...inputValues, [`start-${license.id}`]: e.target.value })
+                  }
+                  onBlur={() =>
+                    handleDateChange(license.id, "startDate", inputValues[`start-${license.id}`])
+                  }
                 />
                 <label htmlFor={`end-date-${license.id}`}>Pabaiga:</label>
                 <input
                   type="date"
-                  className='dateInput'
+                  className="dateInput"
                   id={`end-date-${license.id}`}
-                  value={license.endDate || ''}
-                  onChange={(e) => handleDateChange(license.id, 'endDate', e.target.value)}
+                  value={inputValues[`end-${license.id}`] || license.endDate || ""}
+                  onChange={(e) =>
+                    setInputValues({ ...inputValues, [`end-${license.id}`]: e.target.value })
+                  }
+                  onBlur={() =>
+                    handleDateChange(license.id, "endDate", inputValues[`end-${license.id}`])
+                  }
                 />
                 <label htmlFor={`description-${license.id}`}>Aprašymas:</label>
                 <input
                   type="text"
-                  className='textInput'
+                  className="textInput"
                   id={`description-${license.id}`}
-                  value={license.description || ''}
-                  onChange={(e) => handleDescriptionChange(license.id, e.target.value)}
+                  value={inputValues[license.id] || license.description || ""}
+                  onChange={(e) => setInputValues({ ...inputValues, [license.id]: e.target.value })}
+                  onBlur={() => handleDescriptionChange(license.id, inputValues[license.id])}
                 />
                 <button className='sliderbutton' onClick={() => deleteLicense(license.id)}>Ištrinti</button>
               </div>
@@ -209,14 +295,11 @@ const Licenses = () => {
           </div>
           <button className='sliderbutton' onClick={nextLicense}>Kiti</button>
         </div>
-        <button className='sliderbutton' onClick={saveLicenses} >Išsaugoti leidimus</button>
       </div>
-      
+
     </div>
   );
 };
 
 export default Licenses;
 
-/* Add a functionality to save added licenses, in backend route when saved return,
- assigned unique id's of licenses, and assign them in front, and use those id's to delete licenses */

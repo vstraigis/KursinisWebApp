@@ -10,8 +10,8 @@ import DashSidebar from "./Pages/DashSidebar";
 import Home from "./Pages/SideBarComps/Home";
 import Dashboard from "./Pages/SideBarComps/Dashboard";
 import Licenses from "./Pages/SideBarComps/Licenses";
-import Chart1 from "./Pages/SideBarComps/Chart1";
-import Chart2 from "./Pages/SideBarComps/Chart2";
+import Chart from "./Pages/SideBarComps/Charts";
+
 import Settings from "./Pages/SideBarComps/Settings";
 import Weather from "./Pages/SideBarComps/Weather";
 import Calc from "./Pages/SideBarComps/FishingCalc";
@@ -73,8 +73,7 @@ function App() {
         <Route path="/" element={<PrivateRoute isAuth={isAuth} />}>
           <Route path="/" element={<DashSidebar authDelete={jwtRemove} />} >
             <Route index element={<Home />} />
-            <Route path="chart1" element={<Chart1 />} />
-            <Route path="chart2" element={<Chart2 />} />
+            <Route path="chart" element={<Chart />} />
             <Route path="settings" element={<Settings authDelete={jwtRemove} />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="map" element={<Map />} />

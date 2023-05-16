@@ -280,6 +280,12 @@ app.delete('/admin/lakes/:id', authorization, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
 
+    // First, delete the related rows in the LakeVisit table
+    await db.lakeVisit.deleteMany({
+      where: { lakeId: id },
+    });
+
+    // Now you can delete the lake
     await db.lake.delete({
       where: { id },
     });
@@ -288,6 +294,57 @@ app.delete('/admin/lakes/:id', authorization, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Error deleting lake');
+  }
+});
+
+app.get('/user/:userId/visitedLakes', authorization, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Fetch visited lakes from the database
+    const visitedLakes = await db.lakeVisit.findMany({
+      where: { userId: parseInt(userId) },
+      include: { lake: true },
+    });
+
+    const visitedLakesCount = visitedLakes.reduce((acc, lakeVisit) => {
+      const lakeName = lakeVisit.lake.name;
+      if (acc[lakeName]) {
+        acc[lakeName]++;
+      } else {
+        acc[lakeName] = 1;
+      }
+      return acc;
+    }, {});
+
+    const result = Object.entries(visitedLakesCount).map(([name, count]) => ({
+      name,
+      count,
+    }));
+
+    // Send the visited lakes distribution as a response
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching visited lakes distribution');
+  }
+});
+
+// Get the number of licenses for a user
+app.get('/user/:userId/licenses', authorization, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Fetch licenses from the database
+    const licenses = await db.license.findMany({
+      where: { userId: parseInt(userId) },
+    });
+
+    // Send the licenses count as a response
+    res.json(licenses);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching licenses count');
   }
 });
 //--------------------------------------------------------------------------//

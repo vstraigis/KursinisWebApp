@@ -22,48 +22,50 @@ router.get("/:userId", authorization, async (req, res) => {
 router.post("/:userId", authorization, async (req, res) => {
   try {
     const { userId } = req.params;
-    const { newLicenses, existingLicenses } = req.body; // Destructure new and existing licenses from the request body
+    const licenseData = req.body;
 
-    // Save new licenses to the database
-    await Promise.all(
-      newLicenses.map((license) =>
-        db.license.create({
-          data: {
-            startDate: new Date(license.startDate),
-            endDate: new Date(license.endDate),
-            description: license.description,
-            user: {
-              connect: { id: parseInt(userId) },
-            },
-          },
-        })
-      )
-    );
-
-    // Update existing licenses in the database
-    await Promise.all(
-      existingLicenses.map((license) =>
-        db.license.update({
-          where: { id: license.id },
-          data: {
-            startDate: new Date(license.startDate),
-            endDate: new Date(license.endDate),
-            description: license.description,
-          },
-        })
-      )
-    );
-
-    // Fetch the updated list of licenses from the database
-    const updatedLicenses = await db.license.findMany({
-      where: { userId: parseInt(userId) },
+    // Save a new license
+    const newLicense = await db.license.create({
+      data: {
+        startDate: new Date(licenseData.startDate),
+        endDate: new Date(licenseData.endDate),
+        description: licenseData.description,
+        user: {
+          connect: { id: parseInt(userId) },
+        },
+      },
     });
 
-    // Send the updated licenses as a response
-    res.status(201).json(updatedLicenses);
+    // Send the new license as a response
+    res.status(201).json(newLicense);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error saving licenses");
+    res.status(500).send("Error saving license");
+  }
+});
+
+router.put("/:userId/:licenseId", authorization, async (req, res) => {
+  try {
+    const { userId, licenseId } = req.params;
+    const licenseData = req.body;
+
+    // Update an existing license
+    const updatedLicense = await db.license.update({
+      where: {
+        id: parseInt(licenseId),
+      },
+      data: {
+        startDate: new Date(licenseData.startDate),
+        endDate: new Date(licenseData.endDate),
+        description: licenseData.description,
+      },
+    });
+
+    // Send the updated license as a response
+    res.status(200).json(updatedLicense);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error updating license");
   }
 });
 

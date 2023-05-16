@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { toast } from 'react-toastify';
+
+
 
 const containerStyle = {
   width: '100%',
@@ -34,6 +37,7 @@ const Map = () => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
+
     fetch('http://localhost:5000/lakedata')
       .then(res => res.json())
       .then(data => setMarkers(data));
@@ -71,11 +75,32 @@ const Map = () => {
     }
   };
 
-  const toggleVisited = (lakeName) => {
+  const toggleVisited = async (lakeName) => {
+    let updatedVisitedLakes;
     if (visitedLakes.includes(lakeName)) {
-      setVisitedLakes(visitedLakes.filter((name) => name !== lakeName));
+      updatedVisitedLakes = visitedLakes.filter((name) => name !== lakeName);
     } else {
-      setVisitedLakes([...visitedLakes, lakeName]);
+      updatedVisitedLakes = [...visitedLakes, lakeName];
+    }
+    setVisitedLakes(updatedVisitedLakes);
+
+    // Save the updated visited lakes to the database
+    const lakeIds = updatedVisitedLakes.map(
+      (lakeName) => markers.find((marker) => marker.name === lakeName).id
+    );
+
+    const response = await fetch('http://localhost:5000/save-lakes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: localStorage.token,
+      },
+      body: JSON.stringify({ userId, lakeIds }),
+    });
+
+    if (!response.ok) {
+      alert('Error saving checked lakes');
+      
     }
   };
 
@@ -101,7 +126,7 @@ const Map = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token : localStorage.token
+        token: localStorage.token
       },
       body: JSON.stringify({ userId, lakeIds }),
     });
@@ -131,7 +156,6 @@ const Map = () => {
               />
               Been here
             </label>
-            <button onClick={saveCheckedLakes}>Save checked lakes</button>
           </>
         )}
       </div>

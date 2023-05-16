@@ -3,8 +3,10 @@
 *Pelekas webproject*
 
 To do list:
-- [x] Change License page to save automatically
 - [x] render admin page only when user is admin
+- [x] Add landing page
+- [x] Add statistics page
+
 
 ## How to run
 1. Clone repository
