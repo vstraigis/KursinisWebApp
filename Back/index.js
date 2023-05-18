@@ -347,6 +347,42 @@ app.get('/user/:userId/licenses', authorization, async (req, res) => {
     res.status(500).send('Error fetching licenses count');
   }
 });
+
+// Get all of the user data for data download
+app.get('/download/:userId/data', authorization, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Fetch user data from the database
+    const user = await db.user.findUnique({
+      where: { id: parseInt(userId) },
+      include: {
+        visitedLakes: {
+          include: {
+            lake: true,
+          },
+        },
+        licenses: true,
+        trips: true,
+      },
+    });
+
+    // Prepare the user data with lake names instead of lake ids
+    const userData = {
+      ...user,
+      visitedLakes: user.visitedLakes.map((lakeVisit) => ({
+        ...lakeVisit,
+        lakeId: lakeVisit.lake.name,
+      })),
+    };
+
+    // Send the user data as a response
+    res.json(userData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching user data');
+  }
+});
 //--------------------------------------------------------------------------//
 
 // Example usage with Prisma:

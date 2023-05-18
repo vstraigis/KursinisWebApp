@@ -110,11 +110,77 @@ const Settings = ({ authDelete }) => {
       toast.error("Error deleting account");
     }
   };
+  const objectToXml = (obj, indent = 0) => {
+    let xml = '';
+    const indentation = '    '.repeat(indent);
+  
+    for (const prop in obj) {
+      const isArray = obj[prop] instanceof Array;
+      const isObject = typeof obj[prop] === 'object';
+  
+      xml += isArray ? '' : `${indentation}<${prop}>`;
+      xml += isObject ? '\n' : '';
+  
+      if (isArray) {
+        for (const array in obj[prop]) {
+          xml += `${indentation}<${prop}>\n`;
+          xml += objectToXml(new Object(obj[prop][array]), indent + 1);
+          xml += `${indentation}</${prop}>\n`;
+        }
+      } else if (isObject) {
+        xml += objectToXml(new Object(obj[prop]), indent + 1);
+      } else {
+        xml += obj[prop];
+      }
+  
+      xml += isArray ? '' : `${isObject ? indentation : ''}</${prop}>\n`;
+    }
+  
+    return xml;
+  };
+  
+  const DownloadUserData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/download/${userId}/data`, {
+        headers: { token: localStorage.token }
+      });
+      const { data } = response;
+      console.log("Data:", data);
+  
+      // Convert the data object into an XML string
+      const xmlString = objectToXml(data);
+  
+      // Add XML declaration and root element
+      const finalXmlString = `<?xml version="1.0" encoding="UTF-8"?>\n<root>\n${xmlString}\n</root>`;
+  
+      // Create a Blob using the XML string
+      const blob = new Blob([finalXmlString], { type: "application/xml" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+  
+      // Set the href and download attributes of the anchor element
+      link.href = url;
+      link.download = "data.xml";
+  
+      // Append the link, click it, and remove it from the DOM
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+  
+    } catch (error) {
+      toast.error("Error downloading data");
+    }
+  };
+  
 
   return (
     <div className="settings">
       <div className="settings__container">
         <h1 className="settings__title">Settings</h1>
+        {/* <img src={} alt="avatar" className="settings__avatar" /> */}
         <form className="settings__form">
           <label className="settings__label">
             First Name:
@@ -171,15 +237,18 @@ const Settings = ({ authDelete }) => {
               placeholder="Confirm password"
             />
             <button onClick={saveNewPassword} className="settings__button">
-              Save
+              Išsaugoti naują slaptažodį
             </button>
           </div>
         )}
         <button onClick={saveChanges} className="settings__button">
-          Save Changes
+          Išsaugoti pakeitimus
         </button>
         <button onClick={deleteAccount} className="settings__button">
-          Delete Account
+          Ištrinti paskyrą
+        </button>
+        <button onClick={DownloadUserData} className="settings__button">
+          Gauti duomenis
         </button>
       </div>
     </div>

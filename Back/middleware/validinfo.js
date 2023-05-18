@@ -7,15 +7,15 @@ module.exports = (req, res, next) => {
   
     if (req.path === "/register") {
       if (![email, name, password].every(Boolean)) {
-        return res.status(401).json("Missing Credentials");
+        return res.status(401).json("Trūksta duomenų");
       } else if (!validEmail(email)) {
-        return res.status(401).json("Invalid Email");
+        return res.status(401).json("Neteisingas el. paštas");
       }
     } else if (req.path === "/login") {
       if (![email, password].every(Boolean)) {
-        return res.status(401).json("Missing Credentials");
+        return res.status(401).json(" Trūksta duomenų");
       } else if (!validEmail(email)) {
-        return res.status(401).json("Invalid Email");
+        return res.status(401).json("Neteisingas el. paštas");
       }
     }
   
