@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import GridViewRoundedIcon from "@mui/icons-material/GridViewRounded";
@@ -45,9 +45,10 @@ const DashSidebar = ({ authDelete }) => {
   // const { collapseSidebar, collapsed, toggled, broken, rtl } =
   //   useProSidebar();
 
+
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar className="app">
+    <div style={{ display: "flex", height: "100%" }} className="sidebarcont">
+      <Sidebar className="app" defaultCollapsed="true" >
         <Menu>
           <MenuItem
             className="menu1"
@@ -96,6 +97,7 @@ const DashSidebar = ({ authDelete }) => {
       </Sidebar>
       <div className="contentContainer" style={{ flexGrow: 1, padding: "1rem" }}>
         <Outlet />
+
       </div>
     </div>
   );

@@ -260,3 +260,8 @@ button.ghost:hover {
 .social-containerform a:active {
     transform: scale(0.9);
 }
+
+@media screen and (max-width: 708px) {
+
+}
+	

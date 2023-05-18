@@ -11,10 +11,9 @@ import Home from "./Pages/SideBarComps/Home";
 import Dashboard from "./Pages/SideBarComps/Dashboard";
 import Licenses from "./Pages/SideBarComps/Licenses";
 import Chart from "./Pages/SideBarComps/Charts";
-
 import Settings from "./Pages/SideBarComps/Settings";
 import Weather from "./Pages/SideBarComps/Weather";
-import Calc from "./Pages/SideBarComps/FishingCalc";
+
 import Map from "./Pages/SideBarComps/Map";
 import Calendar from "./Pages/SideBarComps/SideCalendar";
 import AdminPanel from "./Pages/SideBarComps/AdminPanel";
@@ -80,7 +79,6 @@ function App() {
             <Route path="licenses" element={<Licenses />} />
             <Route path="weather" element={<Weather />} />
             <Route path="calendar" element={<Calendar />} />
-            <Route path="calc" element={<Calc />} />
             <Route path="admin" element={<AdminPanel />} />
           </Route>
         </Route>

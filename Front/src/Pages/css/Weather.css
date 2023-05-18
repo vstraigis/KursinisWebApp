@@ -7,6 +7,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     text-align: center;
+    min-height: 30vh;
   }
   
   .weather-rectangle:hover {
@@ -15,8 +16,8 @@
   }
   
   .forecast {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-direction: row;
     gap: 10px;
   }
 
@@ -36,3 +37,22 @@
   /* * {
     border: 2px solid red;
   } */
+
+  @media screen and (max-width: 1000px) {
+    .forecast {
+      flex-direction: column;
+    }
+
+    .weatherSelect {
+      min-width: 80vw;
+    }
+
+    .weather-rectangle {
+      min-height: 40vh;
+    }
+
+    .weatherContent {
+      min-height: 40vh;
+    }
+    
+  }

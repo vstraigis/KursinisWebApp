@@ -4,6 +4,7 @@ import { DataGrid, GridApiRef, useGridApiRef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import "../css/AdminPanel.css"
+import { toast } from 'react-toastify';
 
 const AdminPanel = () => {
     const [lakesData, setLakesData] = useState([]);
@@ -72,7 +73,7 @@ const AdminPanel = () => {
 
     const handleDelete = async () => {
         try {
-            console.log('Deleting lakes:', selectedRows);
+            
             const deletePromises = selectedRows.map((id) =>
                 fetch(`http://localhost:5000/admin/lakes/${id}`, {
                     method: 'DELETE',
@@ -84,15 +85,17 @@ const AdminPanel = () => {
             const failedDeletes = deleteResponses.filter((res) => res.status !== 200);
 
             if (failedDeletes.length > 0) {
+                toast.error('Error deleting some lakes');
                 throw new Error('Error deleting some lakes');
+                
             }
-
-            console.log('Lakes deleted successfully');
+  
+            toast.success('Lakes deleted successfully');
             const updatedLakesData = lakesData.filter((lake) => !selectedRows.includes(lake.id));
             setLakesData(updatedLakesData);
             setSelectedRows([]);
         } catch (error) {
-            console.error('Error deleting lakes:', error);
+            toast.error('Error deleting lakes');
         }
     };
 
@@ -109,12 +112,14 @@ const AdminPanel = () => {
             });
 
             if (response.status !== 200) {
+                toast.error('Error updating lake');
                 throw new Error('Error updating lake');
             }
 
-            console.log('Lake updated successfully');
+            
+            toast.success('Lake updated successfully');
         } catch (error) {
-            console.error('Error updating lake:', error);
+            toast.error('Error updating lake');
         }
     };
 
@@ -140,7 +145,7 @@ const AdminPanel = () => {
                     disableRowSelectionOnClick
                     onRowSelectionModelChange={(newRowSelectionModel) => {
                         setSelectedRows(newRowSelectionModel);
-                        console.log('Selected rows:', newRowSelectionModel);
+                        
                     }}
                     onEditCellChangeCommitted={handleEdit}
                 />

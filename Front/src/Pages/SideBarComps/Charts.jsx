@@ -101,7 +101,7 @@ const VisitedLakesChart = ({ userId }) => {
           counts.push(1);
           colors.push(getRandomColor());
         });
-        console.log('labels:', labels);
+        
 
         setChartData({
           labels: labels, // add labels array
@@ -198,7 +198,7 @@ const Charts = () => {
           headers: { token: localStorage.token },
         });
         const { user } = await response.json();
-        console.log("User :", user);
+ 
         setUserId(user.id);
       } catch (error) {
         console.error("Error fetching user ID:", error);

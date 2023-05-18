@@ -84,3 +84,31 @@
     padding: 1rem;
     border: 3px solid black;
 }
+
+@media screen and (max-width: 530px) {
+    .settings__container {
+        max-width: 90vw;
+    }
+
+    .settings__input {
+        width: 100%;
+    }
+
+    .settings__button {
+        width: 100%;
+    }
+
+    .settings__label {
+        width: 100%;
+    }
+
+    .settings__form {
+        width: 100%;
+    }
+
+    .settings__password {
+        width: 100%;
+    }
+    
+}
+  

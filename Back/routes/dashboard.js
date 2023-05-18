@@ -5,7 +5,6 @@ const authorization = require("../middleware/authorization");
 router.get("/", authorization, async (req, res) => {
     try {
       // req.user has the payload
-      console.log(req.user);
       const user = await db.user.findUnique({
         where: { id: req.user },
       });

@@ -78,3 +78,14 @@
 /* * {
   border: 2px solid red;
 } */
+
+/*breakpoints, first at 1030*/
+
+@media (max-width: 1030px) {
+  .license-container {
+    flex-direction: column;
+  }
+  .license {
+    margin: 1rem 0;
+  }
+}

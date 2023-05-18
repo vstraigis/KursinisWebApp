@@ -24,8 +24,22 @@ const Settings = ({ authDelete }) => {
           headers: { token: localStorage.token } // Replace with the actual token      
         });
         const { user } = await response.json();
-        console.log("User :", user);
+   
         setUserId(user.id);
+        
+        if (user.birthDay) {
+          const date = new Date(user.birthDay);
+          const year = date.getFullYear();
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
+          const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+          user.birthDay = formattedDate;
+        }
+        setState({
+          firstName: user.name || "",
+          lastName: user.lastName || "",
+          birthDate: user.birthDay || "",
+        });
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }

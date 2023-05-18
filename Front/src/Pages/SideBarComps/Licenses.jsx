@@ -53,7 +53,7 @@ const Licenses = () => {
           headers: { token: localStorage.token } // Replace with the actual token
         });
         const { user } = await response.json();
-        console.log("User :", user);
+     
         setUserId(user.id);
       } catch (error) {
         console.error("Error fetching user ID:", error);
@@ -96,7 +96,7 @@ const Licenses = () => {
     }
   
     const originalLicense = licenses.find((license) => license.id === licenseId);
-    console.log(originalLicense, dateType, newDate)
+   
     if (originalLicense) {
       const originalDate = originalLicense[dateType];
   
@@ -184,7 +184,7 @@ const Licenses = () => {
       }
 
       const updatedLicense = await response.json();
-      console.log("Updated license:", updatedLicense);
+     
 
       // Format the dates before returning the license
       const formattedLicense = {
@@ -231,7 +231,7 @@ const Licenses = () => {
         headers: { token: localStorage.token },
       });
       const result = await response.json();
-      console.log("Deleted license:", result);
+     
       // Remove the deleted license from the local state
       removeLicense(licenseId);
       toast.success("Leidimas ištrintas");

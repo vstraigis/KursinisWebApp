@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { toast } from 'react-toastify';
-
+import '../css/Map.css';
 
 
 const containerStyle = {
   width: '100%',
-  height: '100vh',
+  height: '70vh',
 };
 
-const sidebarStyle = {
-  width: '34%',
-  height: '100vh',
-  padding: '10px',
-  overflowY: 'auto',
-  background: "rgba(195, 181, 181, 0.4)",
-  backdropFilter: "blur(10px)",
-  borderRadius: "10px 0px 0px 10px",
-  padding: "1rem",
-  border: "1px solid black",
-  borderRight: "none",
-};
 
 const center = {
   lat: 54.982916,
@@ -49,7 +37,7 @@ const Map = () => {
           headers: { token: localStorage.token } // Replace with the actual token      
         });
         const { user } = await response.json();
-        console.log("User :", user);
+      
         setUserId(user.id);
 
         // Fetch visited lakes for the user
@@ -100,7 +88,7 @@ const Map = () => {
 
     if (!response.ok) {
       alert('Error saving checked lakes');
-      
+
     }
   };
 
@@ -139,8 +127,8 @@ const Map = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={sidebarStyle}>
+    <div className='mapwrapper'>
+      <div className='mapsidebar'>
         {lakeInfo && (
           <>
             <h2>{lakeInfo.name}</h2>
@@ -148,20 +136,22 @@ const Map = () => {
               {lakeInfo.isRented ? 'Rented: Yes' : 'Rented: No'}<br />
               {lakeInfo.isPrivate ? 'Private: Yes' : 'Private: No'}
             </p>
-            <label>
-              <input
-                type="checkbox"
-                checked={visitedLakes.includes(lakeInfo.name)}
-                onChange={() => toggleVisited(lakeInfo.name)}
-              />
-              Been here
-            </label>
+            <div className='mapcheckwrapper'>
+              
+                <input
+                  type="checkbox"
+                  checked={visitedLakes.includes(lakeInfo.name)}
+                  onChange={() => toggleVisited(lakeInfo.name)}
+                />
+                <p>Been here</p>
+              
+            </div>
           </>
         )}
       </div>
       <div style={{ width: '100%' }}>
         <LoadScript googleMapsApiKey="AIzaSyD3B5GSIZRLo5927KVskPigyVrrJJKZx_c">
-          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={8}>
+          <GoogleMap mapContainerStyle={containerStyle} className='mapcontainer' center={center} zoom={8}>
             {markers.map((marker) => (
               <Marker
                 key={marker.id}

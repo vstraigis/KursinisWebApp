@@ -38,7 +38,7 @@ const SideCalendar = () => {
             { token: localStorage.token } // Replace with the actual token      
         });
         const { user } = await response.json();
-        console.log("User :", user);
+    
         setUserId(user.id);
       } catch (error) {
         console.error("Error fetching user ID:", error);
@@ -57,7 +57,7 @@ const SideCalendar = () => {
         headers: { token: localStorage.token } 
       }); 
       const trips = await response.json();
-      console.log('Loaded trips:', trips);
+  
 
       // Update the calendar with the loaded trips
       trips.forEach((trip) => {
@@ -144,13 +144,13 @@ const SideCalendar = () => {
 
   return (
     <Box m="20px">
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" justifyContent="space-between" className="calendarcont">
         {/* CALENDAR SIDEBAR */}
         <Box
           flex="1 1 20%"
           p="15px"
           borderRadius="4px"
-          className="glass"
+          className="tripscont glass"
         >
           <Typography className="glass" variant="h5">Events</Typography>
           <List >

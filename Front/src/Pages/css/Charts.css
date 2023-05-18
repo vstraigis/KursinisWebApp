@@ -15,9 +15,10 @@
     justify-content: center;
     align-content: center;
     width: 100%;
-    height: 500px;
+    height: 100%;
     gap: 20px;
     overflow: auto;
+    padding: 20px;
 
 }
 
@@ -60,3 +61,66 @@
     font-size: 20px;
 }
 
+@media screen and (max-width: 1200px) {
+    .charts {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
+}
+
+@media screen and (max-width: 450px) {
+/* make charts smaller*/
+    .piechart {
+        height: 300px;
+    }
+
+    .countchart {
+        height: 200px;
+        width: 150px;
+    }
+
+    .licensecount {
+        font-size: 15px;
+    }
+
+    .charts {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .chart-container {
+        height: 100%;
+    }
+
+    .countcont {
+        gap: 10px;
+    }
+
+    .countchart {
+        gap: 10px;
+    }
+
+    .countchart {
+        height: 150px;
+        width: 100px;
+    }
+
+    .licensecount {
+        font-size: 10px;
+    }
+
+    .piechart {
+        height: 200px;
+    }
+
+    .charts {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
+
+
+}

@@ -19,6 +19,7 @@ module.exports = async (req, res, next) => {
 
         req.user = payload.user;
 
+
         next();
 
     } catch (error) {

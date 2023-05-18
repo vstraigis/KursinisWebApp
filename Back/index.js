@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const authorization = require('./middleware/authorization');
+const admincheck = require('./middleware/admincheck');
 
 // Middleware
 app.use(express.json()); // req.body
@@ -168,7 +169,7 @@ app.get('/visited-lakes/:userId', authorization, async (req, res) => {
 
 app.put('/user/:id/update',authorization, async (req, res) => {
   // Update user information logic here
-  console.log(req.body);
+
   const { id } = req.params;
   const { firstName, lastName, birthDate } = req.body;
 
@@ -184,7 +185,6 @@ app.put('/user/:id/update',authorization, async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: 'Error updating user information' });
   }
 });
@@ -249,7 +249,7 @@ app.delete("/user/:id/delete", authorization, async (req, res) => {
   }
 });
 
-app.get('/admin/lakes', authorization, async (req, res) => {
+app.get('/admin/lakes', admincheck, async (req, res) => {
   try {
     const lakes = await db.lake.findMany();
     res.json(lakes);
@@ -259,7 +259,7 @@ app.get('/admin/lakes', authorization, async (req, res) => {
   }
 });
 
-app.put('/admin/lakes/:id', authorization, async (req, res) => {
+app.put('/admin/lakes/:id', admincheck, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
     const { name, isRented, isPrivate } = req.body;
@@ -276,7 +276,7 @@ app.put('/admin/lakes/:id', authorization, async (req, res) => {
   }
 });
 
-app.delete('/admin/lakes/:id', authorization, async (req, res) => {
+app.delete('/admin/lakes/:id', admincheck, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
 

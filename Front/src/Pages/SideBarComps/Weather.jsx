@@ -25,7 +25,7 @@ const Weather = () => {
   const getWeather = async (x, y) => {
     const apiKey = '614d75b0b0b961949b101b0eda006126';
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${y}&lon=${x}&appid=${apiKey}`
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${y}&lon=${x}&units=metric&appid=${apiKey}`
     );
     setWeather(response.data);
   };
@@ -38,7 +38,7 @@ const Weather = () => {
     );
 
     const forecastElements = dailyData.slice(0, 5).map((day, index) => {
-      const temperature = Math.round(day.main.temp - 273.15);
+      const temperature = day.main.temp;
       const cloudCover = day.clouds.all;
       const windSpeed = day.wind.speed;
       const isGoodFishingTime = temperature > 15 && cloudCover > 30 && windSpeed >= 2 && windSpeed <= 15;

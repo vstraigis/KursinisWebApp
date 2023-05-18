@@ -4,3 +4,28 @@
     border-radius: 5px;
     padding: 1rem;
   }
+
+  .calendarcont {
+    display: flex;
+ 
+    justify-content: space-between;
+    align-items: center;
+  
+  }
+
+  .tripscont {
+    width: 60vw;
+  }
+
+
+@media screen and (max-width: 730px) {
+
+  .calendarcont {
+    flex-direction: column-reverse;
+  }
+
+  .tripscont {
+    width: 60vw;
+  }
+
+}
