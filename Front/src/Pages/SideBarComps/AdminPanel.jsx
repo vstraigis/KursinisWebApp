@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridApiRef, useGridApiRef } from '@mui/x-data-grid';
+import { DataGrid} from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import "../css/AdminPanel.css"
@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 const AdminPanel = () => {
     const [lakesData, setLakesData] = useState([]);
     const [selectedRows, setSelectedRows] = useState([]);
-    const apiRef = useGridApiRef();
+   
 
     useEffect(() => {
         const fetchLakesData = async () => {

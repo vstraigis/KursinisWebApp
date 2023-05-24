@@ -52,7 +52,7 @@ const Map = () => {
 
   const fetchVisitedLakes = async (fetchedUserId) => {
     try {
-      const response = await fetch(`http://localhost:5000/visited-lakes/${fetchedUserId}`, {
+      const response = await fetch(`http://localhost:5000/visited-lakes`, {
         method: "GET",
         headers: { token: localStorage.token } // Replace with the actual token      
       });
@@ -88,7 +88,8 @@ const Map = () => {
 
     if (!response.ok) {
       alert('Error saving checked lakes');
-
+    } else {
+      toast.success('Checked lakes saved successfully');
     }
   };
 
@@ -107,24 +108,6 @@ const Map = () => {
       : 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
   };
 
-  const saveCheckedLakes = async () => {
-    const lakeIds = visitedLakes.map((lakeName) => markers.find((marker) => marker.name === lakeName).id);
-
-    const response = await fetch('http://localhost:5000/save-lakes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: localStorage.token
-      },
-      body: JSON.stringify({ userId, lakeIds }),
-    });
-
-    if (response.ok) {
-      alert('Checked lakes saved successfully');
-    } else {
-      alert('Error saving checked lakes');
-    }
-  };
 
   return (
     <div className='mapwrapper'>

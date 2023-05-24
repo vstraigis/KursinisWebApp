@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../css/LicenseSlider.css';
 import { toast } from 'react-toastify';
 
@@ -34,12 +34,7 @@ const Licenses = () => {
     setLicenses([...licenses, newLicense]);
   };
 
-  useEffect(() => {
-    const newLicense = licenses.find(license => license.id < 0);
-    if (newLicense) {
-      saveLicense(newLicense);
-    }
-  }, [licenses]);
+
 
   const removeLicense = (id) => {
     setLicenses(licenses.filter((license) => license.id !== id));
@@ -53,7 +48,7 @@ const Licenses = () => {
           headers: { token: localStorage.token } // Replace with the actual token
         });
         const { user } = await response.json();
-     
+
         setUserId(user.id);
       } catch (error) {
         console.error("Error fetching user ID:", error);
@@ -64,19 +59,11 @@ const Licenses = () => {
     fetchUserId();
   }, []);
 
-  useEffect(() => {
-    if (userId) {
-      fetchLicenses();
-    }
-  }, [userId]);
+
 
   const [displayIndex, setDisplayIndex] = useState(0);
 
-  useEffect(() => {
-    if (licenses.length <= 3) {
-      setDisplayIndex(0);
-    }
-  }, [licenses]);
+
 
   const prevLicense = () => {
     if (displayIndex > 0) {
@@ -94,17 +81,17 @@ const Licenses = () => {
     if (!newDate) {
       return;
     }
-  
+
     const originalLicense = licenses.find((license) => license.id === licenseId);
-   
+
     if (originalLicense) {
       const originalDate = originalLicense[dateType];
-  
+
       // If the date has not changed, return without updating the state or saving the license
       if (originalDate === newDate) {
         return;
       }
-  
+
       // Check if the newDate is a valid date
       const date = new Date(newDate);
       if (isNaN(date.getTime())) {
@@ -113,12 +100,12 @@ const Licenses = () => {
         return;
       }
     }
-  
+
     const updatedLicenses = licenses.map((license) =>
       license.id === licenseId ? { ...license, [dateType]: newDate } : license
     );
     setLicenses(updatedLicenses);
-  
+
     if (licenseId >= 0) {
       const updatedLicense = updatedLicenses.find((license) => license.id === licenseId);
       saveLicense(updatedLicense);
@@ -137,7 +124,7 @@ const Licenses = () => {
     }
   };
 
-  const fetchLicenses = async () => {
+  const fetchLicenses = useCallback ( async () => {
     try {
       const response = await fetch(`http://localhost:5000/licenses/${userId}`, {
         method: "GET",
@@ -154,11 +141,11 @@ const Licenses = () => {
     } catch (error) {
       console.error("Error fetching licenses:", error);
     }
-  };
+  }, [userId]);
 
-  const saveLicense = async (licenseData) => {
+  const saveLicense = useCallback (async (licenseData) => {
     try {
-      
+
       let response;
       if (licenseData.id >= 0) {
         // Update the existing license
@@ -184,7 +171,7 @@ const Licenses = () => {
       }
 
       const updatedLicense = await response.json();
-     
+
 
       // Format the dates before returning the license
       const formattedLicense = {
@@ -215,7 +202,7 @@ const Licenses = () => {
       console.error("Error saving license:", error);
       toast.error("Klaida išsaugant leidimą");
     }
-  };
+  }, [licenses, userId]);
 
   const deleteLicense = async (licenseId) => {
     // If the license is not saved in the database (id < 0), delete it locally
@@ -230,8 +217,8 @@ const Licenses = () => {
         method: "DELETE",
         headers: { token: localStorage.token },
       });
-      const result = await response.json();
-     
+      await response.json();
+
       // Remove the deleted license from the local state
       removeLicense(licenseId);
       toast.success("Leidimas ištrintas");
@@ -241,7 +228,24 @@ const Licenses = () => {
     }
   };
 
+  useEffect(() => {
+    const newLicense = licenses.find(license => license.id < 0);
+    if (newLicense) {
+      saveLicense(newLicense);
+    }
+  }, [licenses, saveLicense]);
 
+  useEffect(() => {
+    if (licenses.length <= 3) {
+      setDisplayIndex(0);
+    }
+  }, [licenses]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchLicenses();
+    }
+  }, [userId, fetchLicenses]);
 
   return (
     <div className='licensesPage'>

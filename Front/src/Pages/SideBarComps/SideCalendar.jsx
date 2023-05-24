@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import { formatDate } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -16,7 +16,6 @@ import {
   ListItemText,
   Typography,
   useTheme,
-  Button,
 } from "@mui/material";
 // import Header from "../../components/Header";
 import { tokens } from "../../theme";
@@ -49,12 +48,12 @@ const SideCalendar = () => {
   }, []);
 
 
-  const loadTrips = async () => {
+  const loadTrips = useCallback (async () => {
     if (!userId) return;
     try {
-      const response = await fetch(`http://localhost:5000/trips/${userId}`, {
+      const response = await fetch(`http://localhost:5000/trips`, {
         method: 'GET',
-        headers: { token: localStorage.token } 
+        headers: { token: localStorage.token, userId: userId} 
       }); 
       const trips = await response.json();
   
@@ -73,14 +72,14 @@ const SideCalendar = () => {
     } catch (error) {
       console.error('Error loading trips:', error);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     if (!initialEventsLoaded.current && userId) {
       loadTrips();
       initialEventsLoaded.current = true;
     }
-  }, [userId]);
+  }, [userId, loadTrips]);
 
   const handleDateClick = async (selected) => {
     const title = prompt("Įveskite įvykio pavadinimą");
@@ -106,7 +105,7 @@ const SideCalendar = () => {
             token: localStorage.token,
           },
           body: JSON.stringify({
-            userId, // Replace with the actual user ID
+            userId, 
             date: newEvent.start,
             events: [{ title: newEvent.title }],
           }),
@@ -126,9 +125,9 @@ const SideCalendar = () => {
     ) {
       try {
         // Send a DELETE request to the server
-        await fetch(`http://localhost:5000/trips/${selected.event.id}`, {
+        await fetch(`http://localhost:5000/trips`, {
           method: 'DELETE',
-          headers: { token: localStorage.token } 
+          headers: { token: localStorage.token, tripId: selected.event.id } 
         });
 
         // Remove the event from the calendar

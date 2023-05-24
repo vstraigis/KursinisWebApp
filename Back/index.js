@@ -76,28 +76,15 @@ app.post('/trips', authorization, async (req, res) => {
 });
 
 //get user info
-app.get('/user/:userId', authorization, async (req, res) => {
-  try {
-    const { userId } = req.params;
 
-    // Fetch user from the database
-    const user = await db.user.findUnique({
-      where: { id: parseInt(userId) },
-    });
-
-    // Send the user as a response
-    res.json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error fetching user');
-  }
-});
 
 // Get all trips for a user
-app.get('/trips/:userId', authorization, async (req, res) => {
+app.get('/trips', authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
-
+    
+    const userId  = req.user
+    
+    
     // Fetch trips from the database
     const trips = await db.trip.findMany({
       where: { userId: parseInt(userId) },
@@ -113,9 +100,12 @@ app.get('/trips/:userId', authorization, async (req, res) => {
 });
 
 // Delete a trip by ID
-app.delete('/trips/:tripId', authorization, async (req, res) => {
+app.delete('/trips', authorization, async (req, res) => {
   try {
-    const { tripId } = req.params;
+
+    const tripId = req.headers.tripid;
+
+
     await db.trip.delete({ where: { id: parseInt(tripId) } });
     res.status(204).send('Trip deleted');
   } catch (error) {
@@ -146,9 +136,10 @@ app.post('/save-lakes', authorization, async (req, res) => {
   }
 });
 
-app.get('/visited-lakes/:userId', authorization, async (req, res) => {
+app.get('/visited-lakes', authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+  
+    const userId  = req.user;
 
     // Fetch visited lakes from the database
     const visitedLakes = await db.lakeVisit.findMany({
@@ -167,10 +158,10 @@ app.get('/visited-lakes/:userId', authorization, async (req, res) => {
 });
 
 
-app.put('/user/:id/update',authorization, async (req, res) => {
+app.put('/user/update',authorization, async (req, res) => {
   // Update user information logic here
 
-  const { id } = req.params;
+  const id  = req.user;
   const { firstName, lastName, birthDate } = req.body;
 
   try {
@@ -189,8 +180,9 @@ app.put('/user/:id/update',authorization, async (req, res) => {
   }
 });
 
-app.put('/user/:id/changepassword', authorization, async (req, res) => {
-  const { id } = req.params;
+app.put('/user/changepassword', authorization, async (req, res) => {
+  const  id  = req.user;
+  
   const { newPassword } = req.body;
 
   try {
@@ -211,8 +203,8 @@ app.put('/user/:id/changepassword', authorization, async (req, res) => {
   }
 });
 
-app.delete("/user/:id/delete", authorization, async (req, res) => {
-  const { id } = req.params;
+app.delete("/user/delete", authorization, async (req, res) => {
+  const  id  = req.user;
 
   try {
     // Delete the associated lake visits
@@ -297,9 +289,9 @@ app.delete('/admin/lakes/:id', admincheck, async (req, res) => {
   }
 });
 
-app.get('/user/:userId/visitedLakes', authorization, async (req, res) => {
+app.get('/user/visitedLakes', authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const  userId  = req.user;
 
     // Fetch visited lakes from the database
     const visitedLakes = await db.lakeVisit.findMany({
@@ -331,9 +323,9 @@ app.get('/user/:userId/visitedLakes', authorization, async (req, res) => {
 });
 
 // Get the number of licenses for a user
-app.get('/user/:userId/licenses', authorization, async (req, res) => {
+app.get('/user/licenses', authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const  userId  = req.user;
 
     // Fetch licenses from the database
     const licenses = await db.license.findMany({
@@ -349,9 +341,9 @@ app.get('/user/:userId/licenses', authorization, async (req, res) => {
 });
 
 // Get all of the user data for data download
-app.get('/download/:userId/data', authorization, async (req, res) => {
+app.get('/download/data', authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const  userId  = req.user;
 
     // Fetch user data from the database
     const user = await db.user.findUnique({
@@ -367,9 +359,12 @@ app.get('/download/:userId/data', authorization, async (req, res) => {
       },
     });
 
+    // Destructure the user object and exclude the password field
+    const { password, ...userDataWithoutPassword } = user;
+
     // Prepare the user data with lake names instead of lake ids
     const userData = {
-      ...user,
+      ...userDataWithoutPassword,
       visitedLakes: user.visitedLakes.map((lakeVisit) => ({
         ...lakeVisit,
         lakeId: lakeVisit.lake.name,

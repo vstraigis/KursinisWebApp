@@ -11,7 +11,7 @@ const TotalTripsChart = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/trips/${userId}`, {
+        const response = await fetch(`http://localhost:5000/trips`, {
           method: "GET",
           headers: { token: localStorage.token },
         });
@@ -86,7 +86,7 @@ const VisitedLakesChart = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${userId}/visitedLakes`, {
+        const response = await fetch(`http://localhost:5000/user/visitedLakes`, {
           method: "GET",
           headers: { token: localStorage.token },
         });
@@ -165,7 +165,7 @@ const LicensesChart = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${userId}/licenses`, {
+        const response = await fetch(`http://localhost:5000/user/licenses`, {
           method: "GET",
           headers: { token: localStorage.token },
         });

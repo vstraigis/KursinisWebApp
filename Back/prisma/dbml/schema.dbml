@@ -1,0 +1,66 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  name String [not null]
+  lastName String
+  email String [unique, not null]
+  password String [not null]
+  role Role [not null, default: 'USER']
+  licenses License [not null]
+  trips Trip [not null]
+  visitedLakes LakeVisit [not null]
+  birthDay DateTime
+}
+
+Table License {
+  id Int [pk, increment]
+  userId Int [not null]
+  user User [not null]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  description String
+}
+
+Table Trip {
+  id Int [pk, increment]
+  userId Int [not null]
+  user User [not null]
+  name String [not null]
+  date DateTime [not null]
+}
+
+Table Lake {
+  id Int [pk, increment]
+  x Float [not null]
+  y Float [not null]
+  isRented Boolean [not null]
+  isPrivate Boolean [not null]
+  isLake Boolean [not null]
+  isRiver Boolean [not null]
+  name String [not null]
+  lakeVisits LakeVisit [not null]
+}
+
+Table LakeVisit {
+  id Int [pk, increment]
+  userId Int [not null]
+  user User [not null]
+  lakeId Int [not null]
+  lake Lake [not null]
+}
+
+Enum Role {
+  ADMIN
+  USER
+}
+
+Ref: License.userId > User.id
+
+Ref: Trip.userId > User.id
+
+Ref: LakeVisit.userId > User.id
+
+Ref: LakeVisit.lakeId > Lake.id

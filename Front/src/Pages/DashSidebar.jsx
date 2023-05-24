@@ -30,7 +30,7 @@ const DashSidebar = ({ authDelete }) => {
 
       const parseRes = await response.json();
 
-      if (parseRes.user.role == "ADMIN") {
+      if (parseRes.user.role === "ADMIN") {
         setIsAdmin(true);
       }
     } catch (error) {

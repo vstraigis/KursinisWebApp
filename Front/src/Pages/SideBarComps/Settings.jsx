@@ -59,7 +59,7 @@ const Settings = ({ authDelete }) => {
   const saveNewPassword = async () => {
     if (state.newPassword === state.confirmPassword) {
       try {
-        await axios.put(`http://localhost:5000/user/${userId}/changepassword`, {
+        await axios.put(`http://localhost:5000/user/changepassword`, {
           newPassword: state.newPassword,
         }, {
           headers: { token: localStorage.token }
@@ -85,7 +85,7 @@ const Settings = ({ authDelete }) => {
 
     if (Object.keys(payload).length > 0) {
       try {
-        await axios.put(`http://localhost:5000/user/${userId}/update`, payload, {
+        await axios.put(`http://localhost:5000/user/update`, payload, {
           headers: { token: localStorage.token }
         });
         toast.success("Changes saved");
@@ -100,7 +100,7 @@ const Settings = ({ authDelete }) => {
 
   const deleteAccount = async () => {
     try {
-      await axios.delete(`http://localhost:5000/user/${userId}/delete`, {
+      await axios.delete(`http://localhost:5000/user/delete`, {
         headers: { token: localStorage.token }
       });
       toast.success("Account deleted");
@@ -110,6 +110,7 @@ const Settings = ({ authDelete }) => {
       toast.error("Error deleting account");
     }
   };
+
   const objectToXml = (obj, indent = 0) => {
     let xml = '';
     const indentation = '    '.repeat(indent);
@@ -124,11 +125,11 @@ const Settings = ({ authDelete }) => {
       if (isArray) {
         for (const array in obj[prop]) {
           xml += `${indentation}<${prop}>\n`;
-          xml += objectToXml(new Object(obj[prop][array]), indent + 1);
+          xml += objectToXml({...obj[prop][array]}, indent + 1);
           xml += `${indentation}</${prop}>\n`;
         }
       } else if (isObject) {
-        xml += objectToXml(new Object(obj[prop]), indent + 1);
+        xml += objectToXml({...obj[prop]}, indent + 1);
       } else {
         xml += obj[prop];
       }
@@ -141,8 +142,10 @@ const Settings = ({ authDelete }) => {
   
   const DownloadUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/download/${userId}/data`, {
+      const response = await axios.get(`http://localhost:5000/download/data`, {
         headers: { token: localStorage.token }
+        // incldue user id in the request body
+
       });
       const { data } = response;
       console.log("Data:", data);
@@ -179,11 +182,11 @@ const Settings = ({ authDelete }) => {
   return (
     <div className="settings">
       <div className="settings__container">
-        <h1 className="settings__title">Settings</h1>
+        <h1 className="settings__title">Nustatymai</h1>
         {/* <img src={} alt="avatar" className="settings__avatar" /> */}
         <form className="settings__form">
           <label className="settings__label">
-            First Name:
+            Vardas:
             <input
               type="text"
               name="firstName"
@@ -193,7 +196,7 @@ const Settings = ({ authDelete }) => {
             />
           </label>
           <label className="settings__label">
-            Last Name:
+            Pavardė:
             <input
               type="text"
               name="lastName"
@@ -204,7 +207,7 @@ const Settings = ({ authDelete }) => {
             />
           </label>
           <label className="settings__label">
-            Birth Date:
+            Gimtadienis:
             <input
               type="date"
               name="birthDate"
@@ -216,7 +219,7 @@ const Settings = ({ authDelete }) => {
           </label>
         </form>
         <button onClick={changePassword} className="settings__button">
-          Change Password
+          Keisti slaptažodį
         </button>
         {state.showChangePassword && (
           <div className="settings__password">
