@@ -23,7 +23,6 @@ const FormPage = ({ isAuth, authChange}) => {
     event.preventDefault();
 
     try {
-      // Perform authentication logic here
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,10 +55,6 @@ const FormPage = ({ isAuth, authChange}) => {
     event.preventDefault();
 
     try {
-      // Perform authentication logic here
-
-      //const body = { regname, regmail, regpass };
-
       const response = await fetch("http://localhost:5000/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,7 +120,6 @@ const FormPage = ({ isAuth, authChange}) => {
           <form className="logregform" action='#' onSubmit={handleSignUp} >
             <h1 className="reg-text">Registracija</h1>
             <div className="social-container">
-              {/* <a href="#" className="social" onClick={notify }><img src={ggbutt} alt="Google" /></a> */}
             </div>
            
             <input className="regname" type="text" placeholder="Vardas" value={regname} onChange={handleNameChange} />
@@ -138,12 +132,10 @@ const FormPage = ({ isAuth, authChange}) => {
           <form className="logregform" action="#" onSubmit={handleSignIn} >
             <h1 className="log-text">Prisijungimas</h1>
             <div className="social-containerform">
-              {/* <a href="#" className="social"><img src={ggbutt} alt="Google" /></a> */}
             </div>
            
             <input className="logmail" type="email" placeholder="El.Paštas" value={logmail} onChange={handleLogEmailChange} />
             <input className="logpass" type="password" placeholder="Slaptažodis" value={logpass} onChange={handleLogPasswordChange} />
-            {/* <a className="additional1" href="#">Pamiršau slaptažodį</a> */}
             <button className="logregbutt">Prisijungti</button>
           </form>
         </div>

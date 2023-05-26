@@ -14,19 +14,17 @@ const Settings = ({ authDelete }) => {
     confirmPassword: "",
   });
 
-  const [userId, setUserId] = useState(null);
+ 
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
         const response = await fetch("http://localhost:5000/dashboard/", {
           method: "GET",
-          headers: { token: localStorage.token } // Replace with the actual token      
+          headers: { token: localStorage.token }     
         });
         const { user } = await response.json();
-   
-        setUserId(user.id);
-        
+      
         if (user.birthDay) {
           const date = new Date(user.birthDay);
           const year = date.getFullYear();
@@ -104,7 +102,7 @@ const Settings = ({ authDelete }) => {
         headers: { token: localStorage.token }
       });
       toast.success("Account deleted");
-      // Redirect to the login page or any other appropriate page
+      
       authDelete();
     } catch (error) {
       toast.error("Error deleting account");
@@ -144,7 +142,7 @@ const Settings = ({ authDelete }) => {
     try {
       const response = await axios.get(`http://localhost:5000/download/data`, {
         headers: { token: localStorage.token }
-        // incldue user id in the request body
+      
 
       });
       const { data } = response;

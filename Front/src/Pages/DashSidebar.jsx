@@ -42,9 +42,7 @@ const DashSidebar = ({ authDelete }) => {
     adminCheck();
   }, []);
 
-  // const { collapseSidebar, collapsed, toggled, broken, rtl } =
-  //   useProSidebar();
-
+ 
 
   return (
     <div style={{ display: "flex", height: "100%" }} className="sidebarcont">
@@ -70,7 +68,7 @@ const DashSidebar = ({ authDelete }) => {
           </MenuItem>
           <MenuItem component={<Link to="licenses" className="link" />} icon={<ReceiptRoundedIcon />}> Leidimai </MenuItem>
           <MenuItem component={<Link to="chart" className="link" />} icon={<BarChartRoundedIcon />}> Statistika </MenuItem>
-          {/* <SubMenu label="Orai" icon={<ThermostatIcon />}> */}
+         
           <MenuItem component={<Link to="weather" className="link" />} icon={<AirIcon />}>
             Orai
           </MenuItem>

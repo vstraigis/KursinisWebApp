@@ -2,9 +2,9 @@ const authorization = require("../middleware/authorization");
 const router = require("express").Router();
 const db = require("../db");
 
-router.get("/:userId", authorization, async (req, res) => {
+router.get("/", authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user;
 
     // Fetch licenses from the database
     const licenses = await db.license.findMany({
@@ -19,9 +19,9 @@ router.get("/:userId", authorization, async (req, res) => {
   }
 });
 
-router.post("/:userId", authorization, async (req, res) => {
+router.post("/", authorization, async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user;
     const licenseData = req.body;
 
     // Save a new license
@@ -44,9 +44,9 @@ router.post("/:userId", authorization, async (req, res) => {
   }
 });
 
-router.put("/:userId/:licenseId", authorization, async (req, res) => {
+router.put("/id", authorization, async (req, res) => {
   try {
-    const { userId, licenseId } = req.params;
+    const  licenseId  = req.headers.licenseid;
     const licenseData = req.body;
 
     // Update an existing license
@@ -69,9 +69,10 @@ router.put("/:userId/:licenseId", authorization, async (req, res) => {
   }
 });
 
-router.delete("/:userId/:licenseId", authorization, async (req, res) => {
+router.delete("/id", authorization, async (req, res) => {
   try {
-    const { userId, licenseId } = req.params;
+    const userId = req.user;
+    const licenseId   = req.headers.licenseid;
 
     // Check if the license exists with the given userId and licenseId
     const license = await db.license.findFirst({

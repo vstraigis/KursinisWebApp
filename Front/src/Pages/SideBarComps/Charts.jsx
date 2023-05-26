@@ -5,7 +5,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
 Chart.register(ArcElement, Tooltip, Legend);
 
-const TotalTripsChart = ({ userId }) => {
+const TotalTripsChart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const TotalTripsChart = ({ userId }) => {
     };
 
     fetchData();
-  }, [userId]);
+  }, []);
 
   // Function to generate a random color
   const getRandomColor = () => {
@@ -80,7 +80,7 @@ const TotalTripsChart = ({ userId }) => {
   );
 };
 
-const VisitedLakesChart = ({ userId }) => {
+const VisitedLakesChart = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const VisitedLakesChart = ({ userId }) => {
         
 
         setChartData({
-          labels: labels, // add labels array
+          labels: labels, 
           datasets: [
             {
               data: counts,
@@ -119,7 +119,7 @@ const VisitedLakesChart = ({ userId }) => {
     };
 
     fetchData();
-  }, [userId]);
+  }, []);
 
 
   // Function to generate a random color
@@ -159,7 +159,7 @@ const VisitedLakesChart = ({ userId }) => {
 
 };
 
-const LicensesChart = ({ userId }) => {
+const LicensesChart = () => {
   const [licenseCount, setLicenseCount] = useState(0);
 
   useEffect(() => {
@@ -177,7 +177,7 @@ const LicensesChart = ({ userId }) => {
     };
 
     fetchData();
-  }, [userId]);
+  }, []);
 
   return (
     <div className='countcont'>
@@ -188,26 +188,6 @@ const LicensesChart = ({ userId }) => {
 };
 
 const Charts = () => {
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/dashboard/", {
-          method: "GET",
-          headers: { token: localStorage.token },
-        });
-        const { user } = await response.json();
- 
-        setUserId(user.id);
-      } catch (error) {
-        console.error("Error fetching user ID:", error);
-      }
-    };
-
-    fetchUserId();
-  }, []);
-
   return (
     <>
       <div className='chart-container'>
@@ -215,12 +195,12 @@ const Charts = () => {
         <div className='charts'>
           <div className='piechart'>
             <h3>Planned Trips</h3>
-            {userId && <TotalTripsChart userId={userId} />}
+            <TotalTripsChart />
           </div>
-          <div className='countchart'>{userId && <LicensesChart userId={userId} />}</div>
+          <div className='countchart'> <LicensesChart/></div>
           <div className='piechart'>
             <h3>Visited Lakes</h3>
-            {userId && <VisitedLakesChart userId={userId} />}
+            <VisitedLakesChart/>
           </div>
 
         </div>

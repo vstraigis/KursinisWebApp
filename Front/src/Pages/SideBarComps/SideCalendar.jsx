@@ -17,7 +17,6 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-// import Header from "../../components/Header";
 import { tokens } from "../../theme";
 
 const SideCalendar = () => {
@@ -26,34 +25,13 @@ const SideCalendar = () => {
   const [currentEvents, setCurrentEvents] = useState([]);
   const calendarRef = useRef(null);
   const initialEventsLoaded = useRef(false);
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/dashboard/", {
-          method: "GET",
-          headers:
-            { token: localStorage.token } // Replace with the actual token      
-        });
-        const { user } = await response.json();
-    
-        setUserId(user.id);
-      } catch (error) {
-        console.error("Error fetching user ID:", error);
-      }
-    };
-
-    fetchUserId();
-  }, []);
 
 
   const loadTrips = useCallback (async () => {
-    if (!userId) return;
     try {
       const response = await fetch(`http://localhost:5000/trips`, {
         method: 'GET',
-        headers: { token: localStorage.token, userId: userId} 
+        headers: { token: localStorage.token} 
       }); 
       const trips = await response.json();
   
@@ -65,21 +43,21 @@ const SideCalendar = () => {
           id: trip.id,
           title: trip.name,
           start: trip.date,
-          allDay: true, // Set this to true if the event is an all-day event
+          allDay: true, 
         };
         calendarApi.addEvent(event);
       });
     } catch (error) {
       console.error('Error loading trips:', error);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
-    if (!initialEventsLoaded.current && userId) {
+    if (!initialEventsLoaded.current) {
       loadTrips();
       initialEventsLoaded.current = true;
     }
-  }, [userId, loadTrips]);
+  }, [loadTrips]);
 
   const handleDateClick = async (selected) => {
     const title = prompt("Įveskite įvykio pavadinimą");
@@ -105,7 +83,6 @@ const SideCalendar = () => {
             token: localStorage.token,
           },
           body: JSON.stringify({
-            userId, 
             date: newEvent.start,
             events: [{ title: newEvent.title }],
           }),
@@ -151,7 +128,7 @@ const SideCalendar = () => {
           borderRadius="4px"
           className="tripscont glass"
         >
-          <Typography className="glass" variant="h5">Events</Typography>
+          <Typography className="glass" variant="h5">Kelionės</Typography>
           <List >
             {currentEvents.map((event, index) => (
               <ListItem

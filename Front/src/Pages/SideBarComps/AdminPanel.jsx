@@ -151,7 +151,7 @@ const AdminPanel = () => {
                 />
             </Box>
             <Button variant="contained" color="primary" onClick={handleDelete}>
-                Delete Selected
+                Ištrinti pasirinktus
             </Button>
         </div>
     );

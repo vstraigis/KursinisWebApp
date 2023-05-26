@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import AsyncSelect from 'react-select/async';
-import axios from 'axios';
 import "../css/Weather.css"
 
 const Weather = () => {
@@ -23,11 +22,11 @@ const Weather = () => {
   };
 
   const getWeather = async (x, y) => {
-    const apiKey = '614d75b0b0b961949b101b0eda006126';
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?lat=${y}&lon=${x}&units=metric&appid=${apiKey}`
-    );
-    setWeather(response.data);
+    const response = await fetch(`http://localhost:5000/api/weather/${x}/${y}`, {
+      headers: { token: localStorage.token },
+    });
+    const weatherData = await response.json();
+    setWeather(weatherData);
   };
 
   const renderForecast = () => {
@@ -71,6 +70,7 @@ const Weather = () => {
 
   return (
     <div className='weatherContent'>
+      <h1> Pasirinkite norimą ežerą </h1>
       <AsyncSelect
         loadOptions={loadLakes}
         onChange={handleSelectChange}
@@ -79,7 +79,7 @@ const Weather = () => {
         className='weatherSelect'
       />
       {selectedLake && weather && (
-        <div style={{display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
           <h3>{selectedLake.name}</h3>
           {renderForecast()}
         </div>

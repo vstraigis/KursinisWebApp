@@ -22,7 +22,7 @@ const Map = () => {
   const [selectedLake, setSelectedLake] = useState(null);
   const [visitedLakes, setVisitedLakes] = useState([]);
   const [lakeInfo, setLakeInfo] = useState(null);
-  const [userId, setUserId] = useState(null);
+  const [googleMapsApiKey, setGoogleMapsApiKey] = useState(null);
 
   useEffect(() => {
 
@@ -30,31 +30,28 @@ const Map = () => {
       .then(res => res.json())
       .then(data => setMarkers(data));
 
-    const fetchUserId = async () => {
+    const fetchGoogleMapsApiKey = async () => {
       try {
-        const response = await fetch("http://localhost:5000/dashboard/", {
-          method: "GET",
-          headers: { token: localStorage.token } // Replace with the actual token      
+        const response = await fetch(`http://localhost:5000/api/maps`, {
+          headers: { token: localStorage.token } 
         });
-        const { user } = await response.json();
-      
-        setUserId(user.id);
-
-        // Fetch visited lakes for the user
-        fetchVisitedLakes(user.id);
+        const data = await response.json();
+        setGoogleMapsApiKey(data.apiKey);
       } catch (error) {
-        console.error("Error fetching user ID:", error);
+        console.error("Error fetching Google Maps API key:", error);
       }
     };
 
-    fetchUserId();
+    fetchGoogleMapsApiKey();
+    fetchVisitedLakes();
+
   }, []);
 
-  const fetchVisitedLakes = async (fetchedUserId) => {
+  const fetchVisitedLakes = async () => {
     try {
       const response = await fetch(`http://localhost:5000/visited-lakes`, {
         method: "GET",
-        headers: { token: localStorage.token } // Replace with the actual token      
+        headers: { token: localStorage.token }     
       });
       const data = await response.json();
       setVisitedLakes(data);
@@ -83,7 +80,7 @@ const Map = () => {
         'Content-Type': 'application/json',
         token: localStorage.token,
       },
-      body: JSON.stringify({ userId, lakeIds }),
+      body: JSON.stringify({ lakeIds }),
     });
 
     if (!response.ok) {
@@ -120,20 +117,21 @@ const Map = () => {
               {lakeInfo.isPrivate ? 'Private: Yes' : 'Private: No'}
             </p>
             <div className='mapcheckwrapper'>
-              
-                <input
-                  type="checkbox"
-                  checked={visitedLakes.includes(lakeInfo.name)}
-                  onChange={() => toggleVisited(lakeInfo.name)}
-                />
-                <p>Been here</p>
-              
+
+              <input
+                type="checkbox"
+                checked={visitedLakes.includes(lakeInfo.name)}
+                onChange={() => toggleVisited(lakeInfo.name)}
+              />
+              <p>Been here</p>
+
             </div>
           </>
         )}
       </div>
       <div style={{ width: '100%' }}>
-        <LoadScript googleMapsApiKey="AIzaSyD3B5GSIZRLo5927KVskPigyVrrJJKZx_c">
+        {googleMapsApiKey && ( 
+          <LoadScript googleMapsApiKey={googleMapsApiKey}>
           <GoogleMap mapContainerStyle={containerStyle} className='mapcontainer' center={center} zoom={8}>
             {markers.map((marker) => (
               <Marker
@@ -143,7 +141,7 @@ const Map = () => {
                   setSelectedLake(marker);
                   displayLakeInfo(marker);
                 }}
-                icon={getIconUrl(marker.name)} // Add this line
+                icon={getIconUrl(marker.name)} 
               />
             ))}
 
@@ -159,6 +157,7 @@ const Map = () => {
             )}
           </GoogleMap>
         </LoadScript>
+        )}
       </div>
     </div>
   );

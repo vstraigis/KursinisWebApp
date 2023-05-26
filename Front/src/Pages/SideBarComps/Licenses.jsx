@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const Licenses = () => {
   const [licenses, setLicenses] = useState([]);
-  const [userId, setUserId] = useState(null);
+ 
   const [inputValues, setInputValues] = useState({});
 
 
@@ -40,24 +40,7 @@ const Licenses = () => {
     setLicenses(licenses.filter((license) => license.id !== id));
   };
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/dashboard/", {
-          method: "GET",
-          headers: { token: localStorage.token } // Replace with the actual token
-        });
-        const { user } = await response.json();
 
-        setUserId(user.id);
-      } catch (error) {
-        console.error("Error fetching user ID:", error);
-      }
-    };
-
-    // Call the fetchUserId function here
-    fetchUserId();
-  }, []);
 
 
 
@@ -126,7 +109,7 @@ const Licenses = () => {
 
   const fetchLicenses = useCallback ( async () => {
     try {
-      const response = await fetch(`http://localhost:5000/licenses/${userId}`, {
+      const response = await fetch(`http://localhost:5000/licenses`, {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -141,7 +124,7 @@ const Licenses = () => {
     } catch (error) {
       console.error("Error fetching licenses:", error);
     }
-  }, [userId]);
+  }, []);
 
   const saveLicense = useCallback (async (licenseData) => {
     try {
@@ -149,18 +132,19 @@ const Licenses = () => {
       let response;
       if (licenseData.id >= 0) {
         // Update the existing license
-        response = await fetch(`http://localhost:5000/licenses/${userId}/${licenseData.id}`, {
+        response = await fetch(`http://localhost:5000/licenses/id`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             token: localStorage.token,
+            licenseId: licenseData.id,
           },
-          body: JSON.stringify(licenseData), // Send a single license
+          body: JSON.stringify(licenseData), 
         });
 
       } else {
         // Save a new license
-        response = await fetch(`http://localhost:5000/licenses/${userId}`, {
+        response = await fetch(`http://localhost:5000/licenses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -202,7 +186,7 @@ const Licenses = () => {
       console.error("Error saving license:", error);
       toast.error("Klaida išsaugant leidimą");
     }
-  }, [licenses, userId]);
+  }, [licenses]);
 
   const deleteLicense = async (licenseId) => {
     // If the license is not saved in the database (id < 0), delete it locally
@@ -213,9 +197,9 @@ const Licenses = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/licenses/${userId}/${licenseId}`, {
+      const response = await fetch(`http://localhost:5000/licenses/id`, {
         method: "DELETE",
-        headers: { token: localStorage.token },
+        headers: { token: localStorage.token, licenseId },
       });
       await response.json();
 
@@ -242,10 +226,8 @@ const Licenses = () => {
   }, [licenses]);
 
   useEffect(() => {
-    if (userId) {
       fetchLicenses();
-    }
-  }, [userId, fetchLicenses]);
+  }, [fetchLicenses]);
 
   return (
     <div className='licensesPage'>
