@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const fs = require("fs");
+const bcrypt = require("bcrypt");
 
 
 const prisma = new PrismaClient();
@@ -36,7 +37,7 @@ async function main() {
     });
   }
 
-  const myLakeData = JSON.parse(fs.readFileSync("./lakes.json", "utf-8"));
+  const myLakeData = JSON.parse(fs.readFileSync("./prisma/lakes.json", "utf-8"));
 
   for (const lake of myLakeData) {
     await prisma.lake.create({
