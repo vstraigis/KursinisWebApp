@@ -1,12 +1,5 @@
 # KursinisWebApp
 
-*Pelekas webproject*
-
-To do list:
-- [x] render admin page only when user is admin
-- [x] Add landing page
-- [x] Add statistics page
-
 
 ## How to run
 1. Clone repository
