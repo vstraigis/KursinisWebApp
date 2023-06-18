@@ -36,7 +36,7 @@ function App() {
 
   async function checkAuth() {
     try {
-      const response = await fetch("http://localhost:5000/auth/verify", {
+      const response = await fetch("http://193.219.91.103:5915/auth/verify", {
         method: "GET",
         headers: { token: localStorage.token },
       });
