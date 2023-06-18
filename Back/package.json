@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:migrate:prod": "npx prisma generate && npx prisma migrate deploy && npx prisma generate && npx prisma db seed --preview-feature && npm run start",
+    "start:migrate:prod": "npx prisma generate && npx prisma migrate deploy && npx prisma generate && npx prisma db seed && npm run start",
     "prisma:seed": "node ./prisma/seed.js"
   },
   "prisma": {
