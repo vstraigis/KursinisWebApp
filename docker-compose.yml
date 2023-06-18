@@ -4,7 +4,7 @@ services:
   frontend:
     build: ./Front  # make sure this path points to your updated Dockerfile
     ports:
-      - '3000:80'  # changed to map port 80 (Nginx) to 3000 on the host
+      - '80:80'  # changed to map port 80 (Nginx) to 3000 on the host
     container_name: pelekas_frontend
     depends_on:
       - backend

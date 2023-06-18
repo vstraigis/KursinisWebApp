@@ -11,7 +11,7 @@ const TotalTripsChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/trips`, {
+        const response = await fetch(`http://193.219.91.103:5915/trips`, {
           method: "GET",
           headers: { token: localStorage.token },
         });
@@ -86,7 +86,7 @@ const VisitedLakesChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/visitedLakes`, {
+        const response = await fetch(`http://193.219.91.103:5915/user/visitedLakes`, {
           method: "GET",
           headers: { token: localStorage.token },
         });
@@ -165,7 +165,7 @@ const LicensesChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/licenses`, {
+        const response = await fetch(`http://193.219.91.103:5915/user/licenses`, {
           method: "GET",
           headers: { token: localStorage.token },
         });

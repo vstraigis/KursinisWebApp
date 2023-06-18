@@ -26,13 +26,13 @@ const Map = () => {
 
   useEffect(() => {
 
-    fetch('http://localhost:5000/lakedata')
+    fetch('http://193.219.91.103:5915/lakedata')
       .then(res => res.json())
       .then(data => setMarkers(data));
 
     const fetchGoogleMapsApiKey = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/maps`, {
+        const response = await fetch(`http://193.219.91.103:5915/api/maps`, {
           headers: { token: localStorage.token } 
         });
         const data = await response.json();
@@ -49,7 +49,7 @@ const Map = () => {
 
   const fetchVisitedLakes = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/visited-lakes`, {
+      const response = await fetch(`http://193.219.91.103:5915/visited-lakes`, {
         method: "GET",
         headers: { token: localStorage.token }     
       });
@@ -74,7 +74,7 @@ const Map = () => {
       (lakeName) => markers.find((marker) => marker.name === lakeName).id
     );
 
-    const response = await fetch('http://localhost:5000/save-lakes', {
+    const response = await fetch('http://193.219.91.103:5915/save-lakes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

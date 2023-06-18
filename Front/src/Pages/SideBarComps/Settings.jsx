@@ -19,7 +19,7 @@ const Settings = ({ authDelete }) => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await fetch("http://localhost:5000/dashboard/", {
+        const response = await fetch("http://193.219.91.103:5915/dashboard/", {
           method: "GET",
           headers: { token: localStorage.token }     
         });
@@ -57,7 +57,7 @@ const Settings = ({ authDelete }) => {
   const saveNewPassword = async () => {
     if (state.newPassword === state.confirmPassword) {
       try {
-        await axios.put(`http://localhost:5000/user/changepassword`, {
+        await axios.put(`http://193.219.91.103:5915/user/changepassword`, {
           newPassword: state.newPassword,
         }, {
           headers: { token: localStorage.token }
@@ -83,7 +83,7 @@ const Settings = ({ authDelete }) => {
 
     if (Object.keys(payload).length > 0) {
       try {
-        await axios.put(`http://localhost:5000/user/update`, payload, {
+        await axios.put(`http://193.219.91.103:5915/user/update`, payload, {
           headers: { token: localStorage.token }
         });
         toast.success("Changes saved");
@@ -98,7 +98,7 @@ const Settings = ({ authDelete }) => {
 
   const deleteAccount = async () => {
     try {
-      await axios.delete(`http://localhost:5000/user/delete`, {
+      await axios.delete(`http://193.219.91.103:5915/user/delete`, {
         headers: { token: localStorage.token }
       });
       toast.success("Account deleted");
@@ -140,7 +140,7 @@ const Settings = ({ authDelete }) => {
   
   const DownloadUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/download/data`, {
+      const response = await axios.get(`http://193.219.91.103:5915/download/data`, {
         headers: { token: localStorage.token }
       
 

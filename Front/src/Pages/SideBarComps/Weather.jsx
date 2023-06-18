@@ -11,7 +11,7 @@ const Weather = () => {
       return [];
     }
 
-    const response = await fetch(`http://localhost:5000/lakedata?search=${inputValue}`);
+    const response = await fetch(`http://193.219.91.103:5915/lakedata?search=${inputValue}`);
     const data = await response.json();
     const lakesOptions = data.map((lake) => ({
       value: lake,
@@ -22,7 +22,7 @@ const Weather = () => {
   };
 
   const getWeather = async (x, y) => {
-    const response = await fetch(`http://localhost:5000/api/weather/${x}/${y}`, {
+    const response = await fetch(`http://193.219.91.103:5915/api/weather/${x}/${y}`, {
       headers: { token: localStorage.token },
     });
     const weatherData = await response.json();

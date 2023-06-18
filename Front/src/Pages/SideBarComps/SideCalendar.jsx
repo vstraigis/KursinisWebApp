@@ -29,7 +29,7 @@ const SideCalendar = () => {
 
   const loadTrips = useCallback (async () => {
     try {
-      const response = await fetch(`http://localhost:5000/trips`, {
+      const response = await fetch(`http://193.219.91.103:5915/trips`, {
         method: 'GET',
         headers: { token: localStorage.token} 
       }); 
@@ -76,7 +76,7 @@ const SideCalendar = () => {
   
       // Save the event automatically
       try {
-        const response = await fetch('http://localhost:5000/trips', {
+        const response = await fetch('http://193.219.91.103:5915/trips', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const SideCalendar = () => {
     ) {
       try {
         // Send a DELETE request to the server
-        await fetch(`http://localhost:5000/trips`, {
+        await fetch(`http://193.219.91.103:5915/trips`, {
           method: 'DELETE',
           headers: { token: localStorage.token, tripId: selected.event.id } 
         });

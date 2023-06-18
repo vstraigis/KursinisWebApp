@@ -23,7 +23,7 @@ const DashSidebar = ({ authDelete }) => {
 
   const adminCheck = async () => {
     try {
-      const response = await fetch("http://localhost:5000/dashboard/", {
+      const response = await fetch("http://193.219.91.103:5915/dashboard/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

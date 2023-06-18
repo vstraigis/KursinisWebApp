@@ -109,7 +109,7 @@ const Licenses = () => {
 
   const fetchLicenses = useCallback ( async () => {
     try {
-      const response = await fetch(`http://localhost:5000/licenses`, {
+      const response = await fetch(`http://193.219.91.103:5915/licenses`, {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -132,7 +132,7 @@ const Licenses = () => {
       let response;
       if (licenseData.id >= 0) {
         // Update the existing license
-        response = await fetch(`http://localhost:5000/licenses/id`, {
+        response = await fetch(`http://193.219.91.103:5915/licenses/id`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const Licenses = () => {
 
       } else {
         // Save a new license
-        response = await fetch(`http://localhost:5000/licenses`, {
+        response = await fetch(`http://193.219.91.103:5915/licenses`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const Licenses = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/licenses/id`, {
+      const response = await fetch(`http://193.219.91.103:5915/licenses/id`, {
         method: "DELETE",
         headers: { token: localStorage.token, licenseId },
       });

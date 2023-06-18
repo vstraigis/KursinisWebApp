@@ -23,7 +23,7 @@ const FormPage = ({ isAuth, authChange}) => {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("http://193.219.91.103:5915/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -55,7 +55,7 @@ const FormPage = ({ isAuth, authChange}) => {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/auth/register", {
+      const response = await fetch("http://193.219.91.103:5915/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

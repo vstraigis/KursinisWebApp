@@ -14,7 +14,7 @@ const AdminPanel = () => {
     useEffect(() => {
         const fetchLakesData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/admin/lakes', {
+                const response = await fetch('http://193.219.91.103:5915/admin/lakes', {
                     method: 'GET',
                     headers: { token: localStorage.token },
                 });
@@ -75,7 +75,7 @@ const AdminPanel = () => {
         try {
             
             const deletePromises = selectedRows.map((id) =>
-                fetch(`http://localhost:5000/admin/lakes/${id}`, {
+                fetch(`http://193.219.91.103:5915/admin/lakes/${id}`, {
                     method: 'DELETE',
                     headers: { token: localStorage.token },
                 })
@@ -102,7 +102,7 @@ const AdminPanel = () => {
     const handleEdit = async (params) => {
         try {
             const { id, field, value } = params;
-            const response = await fetch(`http://localhost:5000/admin/lakes/${id}`, {
+            const response = await fetch(`http://193.219.91.103:5915/admin/lakes/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
