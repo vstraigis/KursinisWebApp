@@ -5,7 +5,8 @@ const db = require("../db");
 router.post('/', authorization, async (req, res) => {
     try {
         // Get trip data from request body
-        const { userId, date, events } = req.body;
+        const userId = req.user;
+        const {date, events } = req.body;
 
         // Save trip to the database
         const newTrip = await db.trip.create({

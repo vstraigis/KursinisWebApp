@@ -1,12 +1,14 @@
-const { PrismaClient } = require('@prisma/client');
-const fs = require('fs');
+const { PrismaClient } = require("@prisma/client");
+const fs = require("fs");
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const lakes = JSON.parse(fs.readFileSync('C:/Users/valst/Desktop/Stud/Kursinis/KursinisWebApp/Front/lakes.json'));
+  const myLakeData = JSON.parse(
+    fs.readFileSync("./lakes.json", "utf-8")
+  );
 
-  for (const lake of lakes) {
+  for (const lake of myLakeData) {
     await prisma.lake.create({
       data: {
         x: lake.x,
@@ -19,8 +21,6 @@ async function main() {
       },
     });
   }
-
-  console.log('Data loaded successfully!');
 }
 
 main()

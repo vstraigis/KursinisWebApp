@@ -13,7 +13,6 @@ RUN npm ci
 # Copy the .env file
 COPY .env ./
 
-RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
@@ -21,5 +20,8 @@ COPY . .
 # Expose the port that Express app will run on
 EXPOSE 5000
 
+#prisma
+RUN npx prisma generate
+
 # Start the Express app
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:migrate:prod"]
