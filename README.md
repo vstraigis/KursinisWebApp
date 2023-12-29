@@ -1,5 +1,6 @@
-# KursinisWebApp
+# University Course Project
 
+## Fullstack Web Application for fishermen
 
 ## How to run
 1. Clone repository
